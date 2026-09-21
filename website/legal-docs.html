@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法律文书生成 - 农民工维权帮手</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #fafafa; color: #262626; line-height: 1.8; padding-bottom: 2rem; }
+.container { max-width: 900px; margin: 0 auto; padding: 1rem; }
+.header { background: linear-gradient(135deg, #2e7d32, #4caf50); color: white; padding: 2rem 1rem; text-align: center; }
+.header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.header a { color: white; text-decoration: none; font-size: 1rem; }
+.tabs { display: flex; border-bottom: 3px solid #e8e8e8; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.tab { padding: 0.8rem 1.5rem; border: none; background: none; font-size: 1.1rem; font-weight: 600; cursor: pointer; color: #666; border-bottom: 3px solid transparent; margin-bottom: -3px; }
+.tab.active { color: #2e7d32; border-bottom-color: #2e7d32; }
+.form-section { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.form-section h3 { color: #2e7d32; font-size: 1.15rem; margin-bottom: 1rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.7rem; border: 2px solid #e8e8e8; border-radius: 8px; font-size: 1rem; font-family: inherit; box-sizing: border-box; }
+.form-group input:focus, .form-group textarea:focus { outline: none; border-color: #4caf50; }
+.btn { background: #2e7d32; color: white; padding: 0.9rem 2rem; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; width: 100%; }
+.btn:hover { background: #1b5e20; }
+.preview { background: #f5f5f5; padding: 1.5rem; border-radius: 8px; margin-top: 1rem; display: none; }
+.preview.show { display: block; }
+.preview pre { white-space: pre-wrap; font-size: 0.9rem; line-height: 1.6; }
+.actions { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+.actions button { flex: 1; min-width: 120px; }
+.btn-secondary { background: #1976d2; color: white; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+.btn-secondary:hover { background: #1565c0; }
+.btn-back { display: inline-block; background: #2e7d32; color: white; padding: 0.6rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 1rem; }
+.alert { background: #e3f2fd; border: 2px solid #2196f3; border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>⚖️ 法律文书自动生成</h1>
+  <a href="index.html">← 返回首页</a>
+</div>
+
+<div class="container">
+  <a href="index.html" class="btn-back">← 返回首页</a>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('arbitration', event)">劳动仲裁申请书</button>
+    <button class="tab" onclick="switchTab('lawsuit', event)">民事起诉状</button>
+    <button class="tab" onclick="switchTab('complaint', event)">投诉举报书</button>
+  </div>
+
+  <!-- 劳动仲裁申请书 -->
+  <div id="arbitration-form">
+    <div class="alert">
+      <strong>💡 提示：</strong>劳动仲裁是打官司的第一步！追索工资等案件需要先仲裁才能起诉。仲裁免费！
+    </div>
+    
+    <div class="form-section">
+      <h3>👤 申请人信息（您）</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>姓名 *</label>
+          <input type="text" id="ar_name" placeholder="您的姓名">
+        </div>
+        <div class="form-group">
+          <label>性别</label>
+          <select id="ar_gender">
+            <option value="">请选择</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>身份证号 *</label>
+        <input type="text" id="ar_idcard" placeholder="18位身份证号">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>联系电话 *</label>
+          <input type="tel" id="ar_phone" placeholder="您的电话">
+        </div>
+        <div class="form-group">
+          <label>出生日期</label>
+          <input type="date" id="ar_birthday">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>住址</label>
+        <input type="text" id="ar_address" placeholder="您的住址">
+      </div>
+      <div class="form-group">
+        <label>通讯地址</label>
+        <input type="text" id="ar_post_addr" placeholder="或填写与住址相同">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>🏢 被申请人信息（用人单位）</h3>
+      <div class="form-group">
+        <label>公司名称 *</label>
+        <input type="text" id="ar_company" placeholder="用人单位全称">
+      </div>
+      <div class="form-group">
+        <label>统一社会信用代码</label>
+        <input type="text" id="ar_company_code" placeholder="91xxxxxxxxxxxxxxx">
+      </div>
+      <div class="form-group">
+        <label>住所</label>
+        <input type="text" id="ar_company_addr">
+      </div>
+      <div class="form-group">
+        <label>通讯地址</label>
+        <input type="text" id="ar_company_post_addr" placeholder="与住所相同可填"同">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>法定代表人（或主要负责人）</label>
+          <input type="text" id="ar_company_leader">
+        </div>
+        <div class="form-group">
+          <label>职务</label>
+          <input type="text" id="ar_company_duty">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>联络人及联系电话</label>
+        <input type="text" id="ar_company_contact">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>📋 仲裁请求</h3>
+      <div class="form-group">
+        <label>1. 拖欠工资金额 *</label>
+        <input type="text" id="ar_salary" placeholder="例如：50000元">
+      </div>
+      <div class="form-group">
+        <label>2. 未签劳动合同双倍工资差额（可选）</label>
+        <input type="text" id="ar_no_contract" placeholder="如有可填">
+      </div>
+      <div class="form-group">
+        <label>3. 违法解除赔偿金（可选）</label>
+        <input type="text" id="ar_fire" placeholder="如有可填">
+      </div>
+      <div class="form-group">
+        <label>4. 经济补偿金（可选）</label>
+        <input type="text" id="ar_compensation" placeholder="如有可填">
+      </div>
+      <div class="form-group">
+        <label>5. 其他请求</label>
+        <textarea id="ar_other" rows="2" placeholder="其他请求"></textarea>
+      </div>
+      <div class="form-group">
+        <label>仲裁请求计算公式（选填）</label>
+        <textarea id="ar_calc" rows="2" placeholder="如有计算方式可填"></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>📝 基本事实和理由</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>入职时间</label>
+          <input type="date" id="ar_join_date">
+        </div>
+        <div class="form-group">
+          <label>工种/岗位</label>
+          <input type="text" id="ar_job" placeholder="例如：钢筋工">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>有无签订劳动合同</label>
+          <select id="ar_has_contract">
+            <option value="">请选择</option>
+            <option value="有">有</option>
+            <option value="无">无</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>最后一期劳动合同期限</label>
+          <input type="text" id="ar_contract_period" placeholder="例：2024.1.1至2024.12.31">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>工作地点</label>
+        <input type="text" id="ar_work_place">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>工作时间</label>
+          <select id="ar_work_time">
+            <option value="">请选择</option>
+            <option value="标准工时制">标准工时制</option>
+            <option value="综合计算工时制">综合计算工时制</option>
+            <option value="不定时工作制">不定时工作制</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>是否需要考勤</label>
+          <select id="ar_need_check">
+            <option value="">请选择</option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>工资发放方式</label>
+          <select id="ar_pay_type">
+            <option value="">请选择</option>
+            <option value="银行转账">银行转账</option>
+            <option value="现金">现金</option>
+            <option value="微信/支付宝">微信/支付宝</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>入职时工资标准</label>
+          <input type="text" id="ar_salary_std" placeholder="例如：8000元/月">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>工资标准调整情况</label>
+        <input type="text" id="ar_salary_change">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>现是否在职</label>
+          <select id="ar_still_working">
+            <option value="">请选择</option>
+            <option value="是">是</option>
+            <option value="否">否</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>离职时间</label>
+          <input type="date" id="ar_leave_date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>离职原因</label>
+        <input type="text" id="ar_leave_reason" placeholder="如已离职请填写">
+      </div>
+      <div class="form-group">
+        <label>离职前12个月月平均工资</label>
+        <input type="text" id="ar_avg_salary" placeholder="元/月">
+      </div>
+      <div class="form-group">
+        <label>欠薪时间（详细）</label>
+        <input type="text" id="ar_owe_time" placeholder="例如：2024年3月至2024年8月">
+      </div>
+      <div class="form-group">
+        <label>其他需要说明的事实和理由</label>
+        <textarea id="ar_fact_reason" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>仲裁委员会名称</label>
+        <input type="text" id="ar_committee" placeholder="例如：广东省劳动人事争议调解仲裁院">
+      </div>
+    </div>
+
+    <button class="btn" onclick="generateArbitration()">📝 生成仲裁申请书</button>
+
+    <div class="preview" id="ar_preview">
+      <h3>📄 生成的仲裁申请书</h3>
+      <pre id="ar_content"></pre>
+      <div class="actions">
+        <button class="btn-secondary" onclick="downloadArbitrationDoc('劳动仲裁申请书.doc', window.arbitrationData || {})">📥 下载Word版</button>
+        <button class="btn-secondary" onclick="printDoc('ar_content')">🖨️ 打印</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 民事起诉状 -->
+  <div id="lawsuit-form" style="display:none;">
+    <div class="alert">
+      <strong>💡 提示：</strong>对仲裁结果不服才需要起诉。追索劳动报酬案件可以直接起诉。
+    </div>
+    
+    <div class="form-section">
+      <h3>👤 原告信息（您）</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>姓名 *</label>
+          <input type="text" id="ls_name" placeholder="您的姓名">
+        </div>
+        <div class="form-group">
+          <label>性别</label>
+          <select id="ls_gender">
+            <option value="">请选择</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>出生日期</label>
+          <input type="date" id="ls_birthday">
+        </div>
+        <div class="form-group">
+          <label>民族</label>
+          <input type="text" id="ls_nation" placeholder="如：汉族">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>身份证号 *</label>
+        <input type="text" id="ls_idcard" placeholder="18位身份证号">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>联系电话 *</label>
+          <input type="tel" id="ls_phone" placeholder="电话">
+        </div>
+        <div class="form-group">
+          <label>手机</label>
+          <input type="tel" id="ls_mobile" placeholder="手机号">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>住址</label>
+        <input type="text" id="ls_address" placeholder="现住址">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>🏢 被告信息</h3>
+      <div class="form-group">
+        <label>公司名称 *</label>
+        <input type="text" id="ls_company" placeholder="用人单位全称">
+      </div>
+      <div class="form-group">
+        <label>地址</label>
+        <input type="text" id="ls_company_addr">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>电话</label>
+          <input type="tel" id="ls_company_phone">
+        </div>
+        <div class="form-group">
+          <label>手机</label>
+          <input type="tel" id="ls_company_mobile">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>法定代表人</label>
+          <input type="text" id="ls_company_leader">
+        </div>
+        <div class="form-group">
+          <label>职务</label>
+          <input type="text" id="ls_company_duty" placeholder="如：董事长">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>📋 诉讼请求</h3>
+      <div class="form-group">
+        <label>1. 拖欠工资 *</label>
+        <input type="text" id="ls_salary" placeholder="例如：50000元">
+      </div>
+      <div class="form-group">
+        <label>2. 加班费（可选）</label>
+        <input type="text" id="ls_overtime" placeholder="如有加班费请填写">
+      </div>
+      <div class="form-group">
+        <label>3. 拖欠工资违约金（25%）（可选）</label>
+        <input type="text" id="ls_salary_fine" placeholder="如有请填写">
+      </div>
+      <div class="form-group">
+        <label>4. 解除劳动合同经济补偿金（可选）</label>
+        <input type="text" id="ls_compensation" placeholder="如有请填写">
+      </div>
+      <div class="form-group">
+        <label>5. 经济补偿金违约金（50%）（可选）</label>
+        <input type="text" id="ls_compensation_fine" placeholder="如有请填写">
+      </div>
+      <div class="form-group">
+        <label>6. 其他请求</label>
+        <textarea id="ls_other" rows="2"></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>📝 事实与理由</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div class="form-group">
+          <label>入职时间</label>
+          <input type="date" id="ls_join_date">
+        </div>
+        <div class="form-group">
+          <label>岗位/职务</label>
+          <input type="text" id="ls_job">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>工资约定</label>
+        <input type="text" id="ls_salary_std" placeholder="如：每月8000元">
+      </div>
+      <div class="form-group">
+        <label>工资构成说明</label>
+        <input type="text" id="ls_salary_detail" placeholder="如：基本工资+加班费+提成奖金">
+      </div>
+      <div class="form-group">
+        <label>欠薪时间</label>
+        <input type="text" id="ls_owe_time" placeholder="如：自2024年3月起">
+      </div>
+      <div class="form-group">
+        <label>离职时间（如已离职）</label>
+        <input type="date" id="ls_leave_date">
+      </div>
+      <div class="form-group">
+        <label>离职原因</label>
+        <input type="text" id="ls_leave_reason" placeholder="如：无故被解雇">
+      </div>
+      <div class="form-group">
+        <label>劳动仲裁情况</label>
+        <textarea id="ls_arbitration" rows="2" placeholder="仲裁结果如何，是否受理"></textarea>
+      </div>
+      <div class="form-group">
+        <label>管辖法院</label>
+        <input type="text" id="ls_court" placeholder="例如：深圳市南山区人民法院">
+      </div>
+    </div>
+
+    <button class="btn" onclick="generateLawsuit()">📝 生成起诉状</button>
+
+    <div class="preview" id="ls_preview">
+      <h3>📄 生成的起诉状</h3>
+      <pre id="ls_content"></pre>
+      <div class="actions">
+        <button class="btn-secondary" onclick="downloadDoc('民事起诉状.doc', window.lawsuitData || {})">📥 下载Word版</button>
+        <button class="btn-secondary" onclick="printDoc('ls_content')">🖨️ 打印</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 投诉举报书 -->
+  <div id="complaint-form" style="display:none;">
+    <div class="alert">
+      <strong>💡 提示：</strong>投诉举报书用于向劳动监察部门举报违法用工行为。
+    </div>
+    
+    <div class="form-section">
+      <h3>👤 举报人信息</h3>
+      <div class="form-group">
+        <label>姓名</label>
+        <input type="text" id="cm_name">
+      </div>
+      <div class="form-group">
+        <label>电话</label>
+        <input type="tel" id="cm_phone">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>🏢 被举报单位</h3>
+      <div class="form-group">
+        <label>单位名称 *</label>
+        <input type="text" id="cm_company">
+      </div>
+      <div class="form-group">
+        <label>地址</label>
+        <input type="text" id="cm_company_addr">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>📋 举报事项</h3>
+      <div class="form-group">
+        <label>违法事实 *</label>
+        <textarea id="cm_fact" rows="4" placeholder="详细说明违法行为"></textarea>
+      </div>
+    </div>
+
+    <button class="btn" onclick="generateComplaint()">📝 生成举报书</button>
+
+    <div class="preview" id="cm_preview">
+      <h3>📄 生成的举报书</h3>
+      <pre id="cm_content"></pre>
+      <div class="actions">
+        <button class="btn-secondary" onclick="downloadComplaintDoc('投诉举报书.doc', window.complaintData || {})">📥 下载Word版</button>
+        <button class="btn-secondary" onclick="printDoc('cm_content')">🖨️ 打印</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// 页面加载时根据hash显示对应表单
+window.addEventListener('DOMContentLoaded', function() {
+  const hash = window.location.hash;
+  let targetTab = 'arbitration';
+  if (hash === '#lawsuit-form' || hash === '#lawsuit') {
+    targetTab = 'lawsuit';
+  } else if (hash === '#complaint-form' || hash === '#complaint') {
+    targetTab = 'complaint';
+  }
+  // 先移除所有active
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  // 找到对应的tab按钮并添加active
+  const tabs = document.querySelectorAll('.tab');
+  if (targetTab === 'lawsuit' && tabs[1]) tabs[1].classList.add('active');
+  else if (targetTab === 'complaint' && tabs[2]) tabs[2].classList.add('active');
+  else if (tabs[0]) tabs[0].classList.add('active');
+  // 显示对应表单
+  document.getElementById('arbitration-form').style.display = targetTab === 'arbitration' ? 'block' : 'none';
+  document.getElementById('lawsuit-form').style.display = targetTab === 'lawsuit' ? 'block' : 'none';
+  document.getElementById('complaint-form').style.display = targetTab === 'complaint' ? 'block' : 'none';
+});
+
+function switchTab(tab, evt) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  if (evt && evt.target) {
+    evt.target.classList.add('active');
+  } else {
+    // 编程调用时手动设置active
+    const tabs = document.querySelectorAll('.tab');
+    if (tab === 'lawsuit' && tabs[1]) tabs[1].classList.add('active');
+    else if (tab === 'complaint' && tabs[2]) tabs[2].classList.add('active');
+    else if (tabs[0]) tabs[0].classList.add('active');
+  }
+  document.getElementById('arbitration-form').style.display = tab === 'arbitration' ? 'block' : 'none';
+  document.getElementById('lawsuit-form').style.display = tab === 'lawsuit' ? 'block' : 'none';
+  document.getElementById('complaint-form').style.display = tab === 'complaint' ? 'block' : 'none';
+}
+
+function generateArbitration() {
+  const name = document.getElementById('ar_name').value || '___________';
+  const gender = document.getElementById('ar_gender').value || '';
+  const idcard = document.getElementById('ar_idcard').value || '___________';
+  const phone = document.getElementById('ar_phone').value || '___________';
+  const birthday = document.getElementById('ar_birthday').value || '';
+  const address = document.getElementById('ar_address').value || '___________';
+  const postAddr = document.getElementById('ar_post_addr').value || '';
+  
+  const company = document.getElementById('ar_company').value || '___________';
+  const companyCode = document.getElementById('ar_company_code').value || '___________';
+  const companyAddr = document.getElementById('ar_company_addr').value || '___________';
+  const companyPostAddr = document.getElementById('ar_company_post_addr').value || '同住所';
+  const companyLeader = document.getElementById('ar_company_leader').value || '___________';
+  const companyDuty = document.getElementById('ar_company_duty').value || '___________';
+  const companyContact = document.getElementById('ar_company_contact').value || '___________';
+  
+  const salary = document.getElementById('ar_salary').value || '___________';
+  const noContract = document.getElementById('ar_no_contract').value || '无';
+  const fire = document.getElementById('ar_fire').value || '无';
+  const compensation = document.getElementById('ar_compensation').value || '无';
+  const other = document.getElementById('ar_other').value || '无';
+  const calc = document.getElementById('ar_calc').value || '';
+  
+  const joinDate = document.getElementById('ar_join_date').value || '___________';
+  const job = document.getElementById('ar_job').value || '___________';
+  const hasContract = document.getElementById('ar_has_contract').value || '无';
+  const contractPeriod = document.getElementById('ar_contract_period').value || '___________';
+  const workPlace = document.getElementById('ar_work_place').value || '___________';
+  const workTime = document.getElementById('ar_work_time').value || '___________';
+  const needCheck = document.getElementById('ar_need_check').value || '___________';
+  const payType = document.getElementById('ar_pay_type').value || '___________';
+  const salaryStd = document.getElementById('ar_salary_std').value || '___________';
+  const salaryChange = document.getElementById('ar_salary_change').value || '无';
+  const stillWorking = document.getElementById('ar_still_working').value || '';
+  const leaveDate = document.getElementById('ar_leave_date').value || '';
+  const leaveReason = document.getElementById('ar_leave_reason').value || '';
+  const avgSalary = document.getElementById('ar_avg_salary').value || '';
+  const oweTime = document.getElementById('ar_owe_time').value || '___________';
+  const factReason = document.getElementById('ar_fact_reason').value || '';
+  const committee = document.getElementById('ar_committee').value || '广东省劳动人事争议调解仲裁院';
+  
+  const today = new Date().toLocaleDateString('zh-CN');
+  const year = new Date().getFullYear();
+  
+  let requests = [];
+  if (salary && salary !== '___________') requests.push(`1. 请求被申请人支付拖欠工资 ${salary}；`);
+  if (noContract && noContract !== '无') requests.push(`2. 请求被申请人支付未签订书面劳动合同双倍工资差额 ${noContract}；`);
+  if (fire && fire !== '无') requests.push(`3. 请求被申请人支付违法解除劳动合同赔偿金 ${fire}；`);
+  if (compensation && compensation !== '无') requests.push(`4. 请求被申请人支付经济补偿金 ${compensation}；`);
+  if (other && other !== '无') requests.push(`5. 其他请求：${other}；`);
+  
+  const requestsText = requests.length > 0 ? requests.join('\n') : '（请填写仲裁请求）';
+  
+  const content = `劳动仲裁申请书
+
+申请人：${name}
+身份证号：${idcard}
+电话：${phone}
+住址：${address}
+
+被申请人：${company}
+
+仲裁请求：
+${requestsText}
+
+事实与理由：
+申请人于${joinDate || '___________'}入职被申请人处，从事${job}工作，双方约定工资为${salaryStd}。
+自${oweTime}期间，被申请人拖欠申请人工资至今未付。申请人多次催讨，被申请人以各种理由推脱，拒不支付。
+申请人认为，被申请人的行为严重违反了《劳动法》《劳动合同法》等法律法规的规定，侵害了申请人的合法权益。
+
+此致
+${committee}
+
+申请人（签名）：${name}
+${year}年    月    日
+`;
+  document.getElementById('ar_content').textContent = content;
+  document.getElementById('ar_preview').classList.add('show');
+  
+  // 保存数据供下载使用
+  window.arbitrationData = { name, idcard, phone, address, company, companyCode, companyLeader, companyDuty, companyContact, salary, noContract, fire, compensation, other, joinDate, job, salaryStd, oweTime, committee, year };
+}
+
+function generateLawsuit() {
+  const name = document.getElementById('ls_name').value || '陈XX';
+  const gender = document.getElementById('ls_gender').value || '男';
+  const birthday = document.getElementById('ls_birthday').value || 'XXXX年X月X日';
+  const phone = document.getElementById('ls_phone').value || 'XXXXXXXX';
+  const mobile = document.getElementById('ls_mobile').value || 'XXXXXXXXXXX';
+  const address = document.getElementById('ls_address').value || 'XX市XX区XX路XX号';
+  
+  const company = document.getElementById('ls_company').value || 'XXXX有限公司';
+  const companyAddr = document.getElementById('ls_company_addr').value || 'XX市XX区XX路X号';
+  const companyPhone = document.getElementById('ls_company_phone').value || 'XXXXXXXX';
+  const companyMobile = document.getElementById('ls_company_mobile').value || 'XXXXXXXXXXX';
+  const companyLeader = document.getElementById('ls_company_leader').value || 'XXX';
+  const companyDuty = document.getElementById('ls_company_duty').value || '董事长';
+  
+  const salary = document.getElementById('ls_salary').value || 'XXXX.XX';
+  const overtime = document.getElementById('ls_overtime').value || 'XXX';
+  const salaryFine = document.getElementById('ls_salary_fine').value || 'XXX';
+  const compensation = document.getElementById('ls_compensation').value || 'XXXX';
+  const compensationFine = document.getElementById('ls_compensation_fine').value || 'XXXX.XX';
+  
+  const joinDate = document.getElementById('ls_join_date').value || 'XXXX年X月X日';
+  const job = document.getElementById('ls_job').value || '推销员';
+  const salaryStd = document.getElementById('ls_salary_std').value || 'XXXX';
+  const oweTime = document.getElementById('ls_owe_time').value || 'XXXX年X月';
+  const leaveDate = document.getElementById('ls_leave_date').value || 'XXXX年X月';
+  const arbitration = document.getElementById('ls_arbitration').value || '认为我的申诉已过诉讼时效（或：认为我的申诉理由不足），不予受理我的申诉（或：不予支持的申诉请求）';
+  const court = document.getElementById('ls_court').value || '广州市南沙区人民法院';
+  
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  
+  const content = `民事起诉状
+
+原告：${name}，${gender}，${birthday}出生，XX市XX区人，现住${address}，电话：${phone}；手机：${mobile}
+
+被告：${company}，地址在${companyAddr}，电话：${companyPhone}；手机：${companyMobile}
+法定代理人：${companyLeader}；职务：${companyDuty}；电话：${companyPhone}
+
+诉讼请求：
+1、判令被告支付原告拖欠的工资${salary}元、加班费${overtime}元，并支付拖欠工资、加班费25%的违约金${salaryFine}元；
+2、判令被告支付原告解除劳动合同经济补偿金${compensation}元，并支付经济补偿金的50%的违约金${compensationFine}元；
+3、诉讼费由被告承担。
+
+事实与理由：
+我与${joinDate}入职被告处工作，任职${job}，双方约定我每月工资${salaryStd}元，加班费和提成奖金另计。自${oweTime}起，被告拖欠我工资和加班费，共拖欠了工资${salary}元、加班费${overtime}元。${leaveDate}，被告无故将我解雇，并且不支付解除劳动合同经济补偿金给我。我于${year}年${month}月${day}日申请劳动仲裁，要求被告：支付我拖欠的工资${salary}元，加班费${overtime}元，并支付拖欠工资、加班费25%的违约金${salaryFine}元；支付我解除劳动合同经济补偿金${compensation}元,并支付经济补偿金的50%的违约金${compensationFine}元。但劳动争议仲裁委员会${arbitration}。现我提起诉讼，希望法院支持我的诉讼请求。
+
+此致
+${court}
+
+具状人：${name}（签名）
+${year}年${month}月${day}日
+`;
+  document.getElementById('ls_content').textContent = content;
+  document.getElementById('ls_preview').classList.add('show');
+  
+  // 保存数据供下载使用
+  window.lawsuitData = { name, gender, birthday, address, phone, mobile, company, companyAddr, companyPhone, companyMobile, companyLeader, companyDuty, salary, overtime, salaryFine, compensation, compensationFine, joinDate, job, salaryStd, oweTime, leaveDate, arbitration, court, year, month, day };
+}
+
+function generateComplaint() {
+  const name = document.getElementById('cm_name').value || '___________';
+  const phone = document.getElementById('cm_phone').value || '___________';
+  const company = document.getElementById('cm_company').value || '___________';
+  const addr = document.getElementById('cm_company_addr').value || '___________';
+  const fact = document.getElementById('cm_fact').value || '___________';
+  const today = new Date().toLocaleDateString('zh-CN');
+  
+  const content = `
+投诉举报书
+
+举报人：${name}
+电话：${phone}
+
+被举报单位：${company}
+地址：${addr}
+
+举报事项：
+${fact}
+
+举报人认为，上述单位的行为违反了《劳动法》《劳动合同法》等法律法规的规定，严重侵害了劳动者的合法权益。请求劳动保障监察部门依法查处。
+
+此致
+人力资源和社会保障局
+
+举报人（签名）：${name}
+${today}
+`;
+  document.getElementById('cm_content').textContent = content;
+  document.getElementById('cm_preview').classList.add('show');
+  
+  // 保存数据供下载使用
+  window.complaintData = { name, phone, company, addr, fact };
+}
+
+// 下载为Word格式（保持模板排版）
+// 仲裁申请书下载
+function downloadArbitrationDoc(filename, data) {
+  const name = data.name || '';
+  const idcard = data.idcard || '';
+  const phone = data.phone || '';
+  const address = data.address || '';
+  const company = data.company || '';
+  const companyCode = data.companyCode || '';
+  const companyLeader = data.companyLeader || '';
+  const companyDuty = data.companyDuty || '';
+  const companyContact = data.companyContact || '';
+  const salary = data.salary || '';
+  const noContract = data.noContract || '无';
+  const fire = data.fire || '无';
+  const compensation = data.compensation || '无';
+  const other = data.other || '无';
+  const joinDate = data.joinDate || '';
+  const job = data.job || '';
+  const salaryStd = data.salaryStd || '';
+  const oweTime = data.oweTime || '';
+  const committee = data.committee || '广东省劳动人事争议调解仲裁院';
+  const year = data.year || new Date().getFullYear();
+
+  const htmlContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>劳动仲裁申请书</title>
+<style>
+body { font-family: 宋体; font-size: 14pt; line-height: 150%; margin: 0; }
+p { margin: 0; text-indent: 24pt; }
+.title { text-align: center; font-size: 22pt; font-weight: bold; text-indent: 0; }
+.right { text-align: right; }
+</style>
+</head><body>
+<p class="title">劳动仲裁申请书</p>
+<p>申请人：${name}</p>
+<p>身份证号：${idcard}</p>
+<p>电话：${phone}</p>
+<p>住址：${address}</p>
+<p></p>
+<p>被申请人：${company}</p>
+<p>统一社会信用代码：${companyCode}</p>
+<p>法定代表人（或主要负责人）：${companyLeader || ''}     职务：${companyDuty || ''}</p>
+<p>联络人及联系电话：${companyContact}</p>
+<p></p>
+<p>仲裁请求：</p>
+<p>1、请求被申请人支付拖欠工资 ${salary}元；</p>
+<p>2、请求被申请人支付未签订书面劳动合同双倍工资差额 ${noContract}；</p>
+<p>3、请求被申请人支付违法解除劳动合同赔偿金 ${fire}；</p>
+<p>4、请求被申请人支付经济补偿金 ${compensation}；</p>
+<p>5、其他请求：${other}。</p>
+<p></p>
+<p>事实与理由：</p>
+<p>申请人于${joinDate}入职被申请人处，从事${job}工作，双方约定工资为${salaryStd}。</p>
+<p>自${oweTime}期间，被申请人拖欠申请人工资至今未付。申请人多次催讨，被申请人以各种理由推脱，拒不支付。</p>
+<p>申请人认为，被申请人的行为严重违反了《劳动法》《劳动合同法》等法律法规的规定，侵害了申请人的合法权益。</p>
+<p></p>
+<p>此致</p>
+<p>${committee}</p>
+<p></p>
+<p class="right">申请人（签名）：${name}</p>
+<p class="right">${year}年    月    日</p>
+</body></html>`;
+  
+  const blob = new Blob([htmlContent], { type: 'application/msword;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '劳动仲裁申请书.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// 起诉状下载
+function downloadDoc(filename, data) {
+  const name = data.name || '';
+  const gender = data.gender || '男';
+  const birthday = data.birthday || 'XXXX年X月X日';
+  const address = data.address || 'XX市XX区XX路XX号';
+  const phone = data.phone || 'XXXXXXXX';
+  const mobile = data.mobile || 'XXXXXXXXXXX';
+  const company = data.company || 'XXXX有限公司';
+  const companyAddr = data.companyAddr || 'XX市XX区XX路X号';
+  const companyPhone = data.companyPhone || 'XXXXXXXX';
+  const companyMobile = data.companyMobile || 'XXXXXXXXXXX';
+  const companyLeader = data.companyLeader || 'XXX';
+  const companyDuty = data.companyDuty || '董事长';
+  const salary = data.salary || 'XXXX.XX';
+  const overtime = data.overtime || 'XXX';
+  const salaryFine = data.salaryFine || 'XXX';
+  const compensation = data.compensation || 'XXXX';
+  const compensationFine = data.compensationFine || 'XXXX.XX';
+  const joinDate = data.joinDate || 'XXXX年X月X日';
+  const job = data.job || '推销员';
+  const salaryStd = data.salaryStd || 'XXXX';
+  const oweTime = data.oweTime || 'XXXX年X月';
+  const leaveDate = data.leaveDate || 'XXXX年X月';
+  const arbitration = data.arbitration || '认为我的申诉已过诉讼时效（或：认为我的申诉理由不足），不予受理我的申诉（或：不予支持的申诉请求）';
+  const court = data.court || '广州市南沙区人民法院';
+  const year = data.year || new Date().getFullYear();
+  const month = String((data.month || new Date().getMonth() + 1)).padStart(2, '0');
+  const day = String(data.day || new Date().getDate()).padStart(2, '0');
+
+  const htmlContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>民事起诉状</title>
+<style>
+body { font-family: 宋体; font-size: 14pt; line-height: 150%; margin: 0; }
+p { margin: 0; text-indent: 24pt; }
+.title { text-align: center; font-size: 22pt; font-weight: bold; text-indent: 0; }
+.right { text-align: right; }
+</style>
+</head><body>
+<p class="title">民事起诉状</p>
+<p>原告：${name}，${gender}，${birthday}出生，XX市XX区人，现住${address}，电话：${phone}；手机：${mobile}</p>
+<p>被告：${company}，地址在${companyAddr}，电话：${companyPhone}；手机：${companyMobile}</p>
+<p>法定代理人：${companyLeader}；职务：${companyDuty}；电话：${companyPhone}</p>
+<p>诉讼请求：</p>
+<p>1、判令被告支付原告拖欠的工资${salary}元、加班费${overtime}元，并支付拖欠工资、加班费25%的违约金${salaryFine}元；</p>
+<p>2、判令被告支付原告解除劳动合同经济补偿金${compensation}元，并支付经济补偿金的50%的违约金${compensationFine}元；</p>
+<p>3、诉讼费由被告承担。</p>
+<p>事实与理由：</p>
+<p>我与${joinDate}入职被告处工作，任职${job}，双方约定我每月工资${salaryStd}元，加班费和提成奖金另计。自${oweTime}起，被告拖欠我工资和加班费，共拖欠了工资${salary}元、加班费${overtime}元。${leaveDate}，被告无故将我解雇，并且不支付解除劳动合同经济补偿金给我。我于${year}年${month}月${day}日申请劳动仲裁，要求被告：支付我拖欠的工资${salary}元，加班费${overtime}元，并支付拖欠工资、加班费25%的违约金${salaryFine}元；支付我解除劳动合同经济补偿金${compensation}元,并支付经济补偿金的50%的违约金${compensationFine}元。但劳动争议仲裁委员会${arbitration}。现我提起诉讼，希望法院支持我的诉讼请求。</p>
+<p>此致</p>
+<p>${court}</p>
+<p></p>
+<p class="right">具状人：${name}（签名）</p>
+<p class="right">${year}年${month}月${day}日</p>
+</body></html>`;
+  
+  const blob = new Blob([htmlContent], { type: 'application/msword;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '民事起诉状.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// 投诉举报书下载
+function downloadComplaintDoc(filename, data) {
+  const name = data.name || '';
+  const phone = data.phone || '';
+  const company = data.company || '';
+  const addr = data.addr || '';
+  const fact = data.fact || '';
+  const today = new Date().toLocaleDateString('zh-CN');
+
+  const htmlContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>投诉举报书</title>
+<style>
+body { font-family: 宋体; font-size: 14pt; line-height: 150%; margin: 0; }
+p { margin: 0; text-indent: 24pt; }
+.title { text-align: center; font-size: 22pt; font-weight: bold; text-indent: 0; }
+.right { text-align: right; }
+</style>
+</head><body>
+<p class="title">投诉举报书</p>
+<p>举报人：${name}</p>
+<p>电话：${phone}</p>
+<p></p>
+<p>被举报单位：${company}</p>
+<p>地址：${addr}</p>
+<p></p>
+<p>举报事项：</p>
+<p>${fact}</p>
+<p></p>
+<p>举报人认为，上述单位的行为违反了《劳动法》《劳动合同法》等法律法规的规定，严重侵害了劳动者的合法权益。请求劳动保障监察部门依法查处。</p>
+<p></p>
+<p>此致</p>
+<p>人力资源和社会保障局</p>
+<p></p>
+<p class="right">举报人（签名）：${name}</p>
+<p class="right">${today}</p>
+</body></html>`;
+  
+  const blob = new Blob([htmlContent], { type: 'application/msword;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '投诉举报书.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function printDoc(id) {
+  const content = document.getElementById(id).textContent;
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write('<html><head><title>法律文书</title></head><body><pre style="font-family:宋体;font-size:14px;line-height:1.6;">' + content + '</pre></body></html>');
+  printWindow.document.close();
+  printWindow.print();
+}
+</script>
+</body>
+</html>

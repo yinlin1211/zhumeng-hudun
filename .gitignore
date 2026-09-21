@@ -1,0 +1,18 @@
+# 运行环境（首次运行由 start.bat 自动创建）
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# 真实密钥（只保留 keys.env.example 模板）
+keys.env
+
+# 打包产物与临时文件
+*.zip
+*.tar.gz
+*.db-journal
+*.log
+
+# 编辑器
+.idea/
+.vscode/

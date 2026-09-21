@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>农民工维权帮手 - 简单又好懂</title>
+<style>
+/* ===== Accessibility: Font Size Control ===== */
+:root {
+  --primary: #e88428;
+  --primary-light: #f5a856;
+  --primary-dark: #c46610;
+  --secondary: #1d39c4;
+  --bg: #faf8f5;
+  --bg-card: #ffffff;
+  --text: #3d3d3d;
+  --text-secondary: #595959;
+  --border: #e8e8e8;
+  --success: #52c41a;
+  --warning: #faad14;
+  --danger: #ff4d4f;
+  --radius: 16px;
+  --shadow: 0 4px 12px rgba(0,0,0,0.1);
+  --base-size: 18px;
+}
+html { scroll-behavior: smooth; font-size: var(--base-size); }
+body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; margin: 0; }
+/* ===== Accessibility Toolbar ===== */
+.access-toolbar {
+  position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+  display: flex; gap: 10px; flex-direction: column; align-items: flex-end;
+}
+.access-btn {
+  width: 56px; height: 56px; border-radius: 50%; border: none;
+  background: var(--primary); color: white; font-size: 24px; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s;
+}
+.access-btn:hover { transform: scale(1.1); }
+.access-btn.audio-on { background: var(--success); }
+.font-controls { display: flex; gap: 8px; background: white; padding: 8px; border-radius: 30px; box-shadow: var(--shadow); }
+.font-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--primary);
+  background: white; color: var(--primary); font-size: 18px; font-weight: bold; cursor: pointer;
+}
+.font-btn:hover { background: var(--primary); color: white; }
+/* ===== Navigation ===== */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 3px solid var(--primary);
+  padding: 0.75rem 1rem;
+}
+.nav-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-size: 1.3rem; font-weight: 900; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.nav-logo span { font-size: 2rem; }
+.nav-links { display: flex; gap: 1rem; list-style: none; flex-wrap: wrap; justify-content: center; }
+.nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 600; padding: 8px 12px; border-radius: 8px; transition: all 0.2s; }
+.nav-links a:hover, .nav-links a.active { background: var(--primary); color: white; }
+/* ===== Hero ===== */
+.hero {
+  background: url('hero-bg.png') center/cover no-repeat;
+  background-color: #e67e22;
+  color: white; padding: 3rem 1rem; text-align: center;
+  position: relative;
+  min-height: 380px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(0,0,0,0.25);
+}
+.hero > * { position: relative; z-index: 1; }
+.hero h1 { 
+  text-shadow: 3px 3px 10px rgba(0,0,0,0.7); 
+  font-size: 2.2rem; font-weight: 900; margin-bottom: 0.3rem; margin-top: 2rem;
+}
+.hero p { text-shadow: 2px 2px 6px rgba(0,0,0,0.7); margin-bottom: 1.5rem; }
+.hero p { font-size: 1.2rem; opacity: 0.95; max-width: 600px; margin: 0 auto 1.5rem; }
+.hero-icon { font-size: 4rem; margin-bottom: 1rem; }
+/* ===== Section ===== */
+.section { padding: 2.5rem 1rem; }
+.section-inner { max-width: 900px; margin: 0 auto; }
+.section-title { text-align: center; font-size: 1.6rem; font-weight: 800; margin-bottom: 0.3rem; color: var(--text); }
+.section-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem; }
+/* ===== Stage Cards ===== */
+.stage { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+.stage-item {
+  flex: 1; min-width: 250px; max-width: 320px;
+  background: white; border-radius: var(--radius);
+  padding: 1.5rem; box-shadow: var(--shadow);
+  text-decoration: none; color: inherit; border: 3px solid transparent;
+  transition: all 0.3s;
+}
+.stage-item:hover { transform: translateY(-5px); border-color: var(--primary); }
+.stage-num {
+  display: inline-block; width: 45px; height: 45px;
+  background: var(--primary); color: white;
+  border-radius: 50%; text-align: center; line-height: 45px;
+  font-weight: 900; font-size: 1.3rem; margin-bottom: 0.75rem;
+}
+.stage-item h3 { font-size: 1.3rem; margin-bottom: 0.5rem; font-weight: 700; }
+.stage-item p { font-size: 1rem; color: var(--text-secondary); }
+/* ===== Simple Cards ===== */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
+.card, .step, .law-item {
+  background: white; border-radius: var(--radius);
+  padding: 1.5rem; box-shadow: var(--shadow);
+  border-left: 6px solid var(--primary);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover, .step:hover, .law-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+.card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.card h3 .icon { font-size: 1.8rem; }
+.card p, .card li { font-size: 1.05rem; color: var(--text-secondary); line-height: 1.8; }
+.card ul { padding-left: 1.3rem; margin-top: 0.5rem; }
+.card li { margin-bottom: 0.4rem; }
+/* ===== Important Alert Box ===== */
+.alert-box {
+  background: #fff3e0; border: 3px solid var(--primary); border-radius: var(--radius);
+  padding: 1.2rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 12px;
+}
+.alert-box .icon { font-size: 2rem; }
+.alert-box h4 { font-size: 1.2rem; margin-bottom: 0.3rem; color: var(--primary-dark); }
+.alert-box p { font-size: 1.05rem; margin: 0; }
+/* ===== Phone Big Display ===== */
+.phone-display {
+  background: linear-gradient(135deg, #a8071a, #d4380d);
+  color: white; padding: 2rem; text-align: center; border-radius: var(--radius);
+  margin: 1.5rem auto; max-width: 500px;
+}
+.phone-display .label { font-size: 1.1rem; opacity: 0.9; margin-bottom: 0.5rem; }
+.phone-display .number { font-size: 3rem; font-weight: 900; letter-spacing: 3px; }
+.phone-display .desc { font-size: 1rem; opacity: 0.85; margin-top: 0.5rem; }
+.phone-display a { color: white; text-decoration: none; }
+/* ===== Steps Timeline ===== */
+.steps { max-width: 600px; margin: 0 auto; }
+.step {
+  display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start;
+}
+.step-num {
+  min-width: 45px; height: 45px; background: var(--primary); color: white;
+  border-radius: 50%; font-weight: 900; font-size: 1.3rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.step h4 { font-size: 1.2rem; margin-bottom: 0.3rem; font-weight: 700; }
+.step p { font-size: 1.05rem; color: var(--text-secondary); margin: 0; }
+/* ===== Form Styles ===== */
+.form-box {
+  background: white; border-radius: var(--radius); padding: 2rem;
+  box-shadow: var(--shadow); max-width: 700px; margin: 0 auto;
+}
+.form-group { margin-bottom: 1.2rem; }
+.form-group label { display: block; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 0.8rem 1rem; border: 2px solid var(--border);
+  border-radius: 10px; font-size: 1.05rem; font-family: inherit;
+  box-sizing: border-box;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--primary);
+}
+.form-group .hint { font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.3rem; }
+.btn-primary {
+  background: var(--primary); color: white; padding: 1rem 2rem;
+  border: none; border-radius: 10px; font-size: 1.15rem; font-weight: 700;
+  cursor: pointer; width: 100%; transition: background 0.2s;
+}
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-secondary {
+  background: var(--secondary); color: white; padding: 0.8rem 1.5rem;
+  border: none; border-radius: 10px; font-size: 1.05rem; font-weight: 600;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+}
+/* ===== File Upload ===== */
+.upload-box {
+  border: 3px dashed var(--border); border-radius: var(--radius);
+  padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s;
+}
+.upload-box:hover { border-color: var(--primary); background: #fffaf5; }
+.upload-box .icon { font-size: 3rem; margin-bottom: 0.5rem; }
+.upload-box p { font-size: 1.1rem; color: var(--text-secondary); }
+.upload-box input { display: none; }
+/* ===== Generated Contract Display ===== */
+.contract-preview {
+  background: white; border-radius: var(--radius); padding: 1.5rem;
+  box-shadow: var(--shadow); margin-top: 1.5rem; display: none;
+}
+.contract-preview.show { display: block; }
+.contract-preview pre {
+  background: #f5f5f5; padding: 1.5rem; border-radius: 10px;
+  font-size: 0.95rem; line-height: 1.8; overflow-x: auto; white-space: pre-wrap;
+  max-height: 400px; overflow-y: auto;
+}
+.contract-actions {
+  display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;
+}
+/* ===== Law Cards ===== */
+.law-item {
+  background: white; border-radius: var(--radius); padding: 1.5rem;
+  box-shadow: var(--shadow); margin-bottom: 1.2rem; border-left: 5px solid var(--primary);
+}
+.law-item h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem; color: var(--primary); }
+.law-item .highlight { background: #fef8f0; padding: 1rem; border-radius: 10px; font-size: 1rem; line-height: 1.8; }
+/* ===== Footer ===== */
+.footer { background: #333; color: #ccc; padding: 2rem 1rem; text-align: center; }
+.footer p { font-size: 1rem; margin-bottom: 0.5rem; }
+.footer .disclaimer { margin-top: 1rem; font-size: 0.9rem; color: #999; }
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 1.6rem; }
+  .stage { flex-direction: column; align-items: center; }
+  .stage-item { max-width: 100%; }
+  .nav-links { display: none; }
+  .phone-display .number { font-size: 2.2rem; }
+  .access-toolbar { bottom: 10px; right: 10px; }
+  .form-box { padding: 1.5rem; }
+  .contract-actions { flex-direction: column; }
+}
+/* ===== Tabs ===== */
+.tabs { display: flex; gap: 0; border-bottom: 3px solid var(--border); margin-bottom: 1.5rem; flex-wrap: wrap; }
+.tab-btn {
+  padding: 0.8rem 1.5rem; border: none; background: none;
+  font-size: 1.1rem; cursor: pointer; font-weight: 600;
+  color: var(--text-secondary); border-bottom: 3px solid transparent; margin-bottom: -3px;
+}
+.tab-btn:hover { color: var(--primary); }
+.tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+/* ===== Audio Highlight ===== */
+.reading { background: #fff9c4 !important; }
+/* ===== Check Result ===== */
+.check-result { margin-top: 1.5rem; }
+.check-item {
+  background: white; border-radius: 10px; padding: 1rem; margin-bottom: 0.8rem;
+  box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px;
+}
+.check-item.pass { border-left: 4px solid var(--success); }
+.check-item.warn { border-left: 4px solid var(--warning); }
+.check-item.fail { border-left: 4px solid var(--danger); }
+.check-item .status { font-size: 1.5rem; }
+.check-item .text { font-size: 1.05rem; }
+</style>
+</head>
+<body>
+<!-- ===== Accessibility Toolbar ===== -->
+<div class="access-toolbar">
+  <div class="font-controls">
+    <button class="font-btn" onclick="changeFontSize(-2)" title="减小字体">A-</button>
+    <button class="font-btn" onclick="changeFontSize(2)" title="增大字体">A+</button>
+  </div>
+  <button class="access-btn" id="audioBtn" onclick="toggleAudio()" title="点击听语音">
+    🔊
+  </button>
+</div>
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo">
+      <span>🏗️</span> 农民工维权帮手
+    </a>
+    <ul class="nav-links">
+      <li><a href="#stage1">签合同前</a></li>
+      <li><a href="#stage2">签合同</a></li>
+      <li><a href="#stage3">要维权</a></li>
+      <li><a href="#laws">学法律</a></li>
+      <li><a href="#help">打电话</a></li>
+      <li><a href="legal-docs.html">文书</a></li>
+    </ul>
+  </div>
+</nav>
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-icon">🏗️👷</div>
+  <h1>农民工维权帮手</h1>
+  <p>不会打官司？不知道找谁？这里教您怎么办！</p>
+  
+  <!-- 语音播报提示横幅 -->
+  <div style="background:rgba(255,255,255,0.2);padding:1rem 1.5rem;border-radius:12px;margin:1rem auto;max-width:500px;">
+    <p style="margin:0;font-size:1.15rem;">
+      🔊 <strong>不认识字？</strong> 点击右上角 <span style="font-size:1.5rem;">🔊</span> 按钮<strong>听语音</strong>！<br>
+      <span style="font-size:1rem;opacity:0.9;">字太小看不清？点 <span style="font-size:1.3rem;">A+</span> 放大</span>
+    </p>
+  </div>
+</section>
+<!-- ===== THREE STAGES ===== -->
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-title">三步走</h2>
+    <p class="section-subtitle">您在哪个阶段？请点哪个</p>
+    <div class="stage">
+      <a href="#stage1" class="stage-item">
+        <div class="stage-num">1</div>
+        <h3>签合同前</h3>
+        <p>先知道自己有啥权利</p>
+      </a>
+      <a href="#stage2" class="stage-item">
+        <div class="stage-num">2</div>
+        <h3>签合同</h3>
+        <p>怎么签合同不被坑</p>
+      </a>
+      <a href="how-to-help.html" class="stage-item">
+        <div class="stage-num">3</div>
+        <h3>要维权</h3>
+        <p>权益受到侵害怎么办</p>
+      </a>
+    </div>
+  </div>
+</section>
+<!-- ===== STAGE 1: RIGHTS ===== -->
+<section class="section" id="stage1" style="background:#fff5f0;">
+  <div class="section-inner">
+    <h2 class="section-title"><a href="rights-detail.html" style="color:inherit;text-decoration:none;">第一步：知道自己有啥权利</a> <a href="rights-detail.html" style="font-size:0.8rem;color:#d4380d;">(查看详细)</a></h2>
+    <p class="section-subtitle">这些权利，国家法律保障！</p>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'rights-tab')">6大权利</button>
+      <button class="tab-btn" onclick="switchTab(event, 'channels-tab')">找谁帮忙</button>
+    </div>
+    <!-- 6大权利 -->
+    <div class="tab-panel active" id="rights-tab">
+      <div class="alert-box">
+        <span class="icon">⚠️</span>
+        <div>
+          <h4>重要！先看这个</h4>
+          <p>根据《劳动法》，您有6大权利，老板不能不给！</p>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card" data-audio="签订劳动合同的权利！法律规定，干活必须签合同。不签合同超过一个月，老板要给您双倍工资！">
+          <h3><span class="icon">📝</span> 签合同</h3>
+          <p>必须签书面合同！不签是违法的。</p>
+          <ul>
+            <li>合同是法律的"护身符"</li>
+            <li>不签合同 → 老板要赔钱</li>
+            <li>自己必须留一份</li>
+          </ul>
+        </div>
+        <div class="card" data-audio="按时足额拿到工资的权利！工资必须按月发，不能拖欠，不能扣钱！">
+          <h3><span class="icon">💰</span> 拿工钱</h3>
+          <p>工资必须按月足额发！</p>
+          <ul>
+            <li>每月必须发一次</li>
+            <li>不能扣押工资</li>
+            <li>拖欠可去告他</li>
+          </ul>
+        </div>
+        <div class="card" data-audio="劳动安全保护的权利！老板必须给您提供安全的工作环境，安全帽、安全带都要有！">
+          <h3><span class="icon">🦺</span> 保安全</h3>
+          <p>工作要安全，防护必须有！</p>
+          <ul>
+            <li>安全帽、安全带</li>
+            <li>意外保险必须买</li>
+            <li>受伤算工伤</li>
+          </ul>
+        </div>
+        <div class="card" data-audio="参加社会保险的权利！老板必须给您交社保，特别是工伤保险！">
+          <h3><span class="icon">🏥</span> 有保险</h3>
+          <p>老板必须给您交保险！</p>
+          <ul>
+            <li>工伤保险最重要</li>
+            <li>看病能报销</li>
+            <li>老了有养老金</li>
+          </ul>
+        </div>
+        <div class="card" data-audio="不被随意辞退的权利！不能随便让您走人，否则要赔钱！">
+          <h3><span class="icon">🛡️</span> 不被辞退</h3>
+          <p>不能随便让您走人！</p>
+          <ul>
+            <li>违法辞退要赔钱</li>
+            <li>孕期、产期受保护</li>
+            <li>工伤期间不能赶</li>
+          </ul>
+        </div>
+        <div class="card" data-audio="获得工伤赔偿的权利！在工地受伤了，老板必须负责！">
+          <h3><span class="icon">🏥</span> 工伤赔</h3>
+          <p>受伤了有人管！</p>
+          <ul>
+            <li>30天内要申请认定</li>
+            <li>自己也可以申请</li>
+            <li>老板不赔法院判</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- 维权途径 -->
+    <div class="tab-panel" id="channels-tab">
+      <div class="alert-box">
+        <span class="icon">📞</span>
+        <div>
+          <h4>有人欠您钱？找这些部门！</h4>
+          <p>从容易到难，一个一个试</p>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step" data-audio="第一步，先找老板协商！直接跟老板或包工头说，把工资要回来。">
+          <div class="step-num">1</div>
+          <div>
+            <h4>先找老板谈</h4>
+            <p>直接说："欠我的钱啥时候给？" 保留聊天记录</p>
+          </div>
+        </div>
+        <div class="step" data-audio="第二步，打12333或12345投诉！人社局会帮您要钱。">
+          <div class="step-num">2</div>
+          <div>
+            <h4>打 12333 投诉</h4>
+            <p>人社局会调查帮您要钱 | <a href="tel:12333" style="color:var(--primary);font-weight:700;">点击拨打 12333</a></p>
+            <a href="legal-ai.html" style="display:inline-block;margin-top:8px;padding:6px 12px;background:#ff9800;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;">🤖 AI生成举报书</a>
+            <a href="legal-docs.html#complaint" style="display:inline-block;margin-top:8px;padding:6px 12px;background:#ffb74d;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;margin-left:8px;">📝 表单生成</a>
+          </div>
+        </div>
+        <div class="step" data-audio="第三步，申请劳动仲裁！去仲裁委员会，不收费。">
+          <div class="step-num">3</div>
+          <div>
+            <h4>申请劳动仲裁</h4>
+            <p>仲裁委员会会判决 | 免费 | 45天内出结果</p>
+          </div>
+        </div>
+        <div class="step" data-audio="第四步，去法院起诉！拿到仲裁书后15天内可以起诉。">
+          <div class="step-num">4</div>
+          <div>
+            <h4>去法院起诉</h4>
+            <p>法院强制执行 | 农民工讨薪有法律援助</p>
+          </div>
+        </div>
+        <div class="step" data-audio="第五步，找工会帮忙！工会可以帮您发函、找律师。">
+          <div class="step-num">5</div>
+          <div>
+            <h4>找工会帮忙</h4>
+            <p>总工会可以发函要求老板给钱</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== STAGE 2: CONTRACT ===== -->
+<section class="section" id="stage2">
+  <div class="section-inner">
+    <h2 class="section-title">第二步：签合同不被坑</h2>
+    <p class="section-subtitle">合同签对了，才能保护自己！</p>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'generate-tab')">生成合同</button>
+      <button class="tab-btn" onclick="switchTab(event, 'check-tab')">上传检查</button>
+      <button class="tab-btn" onclick="switchTab(event, 'checklist-tab')">检查清单</button>
+    </div>
+    <!-- 生成合同 -->
+    <div class="tab-panel active" id="generate-tab">
+      <div class="alert-box">
+        <span class="icon">✍️</span>
+        <div>
+          <h4>生成正式劳务分包合同</h4>
+          <p>按照深圳市建设工程施工劳务分包合同标准格式，填完信息即可生成</p>
+        </div>
+      </div>
+      <div class="form-box">
+        <!-- 快速录入区放最上面 -->
+        <div style="background:#e3f2fd;padding:1.2rem;border-radius:12px;margin-bottom:1.5rem;">
+          <h4 style="margin:0 0 0.8rem 0;color:#1565c0;">🎤 快速录入（推荐）</h4>
+          
+          <!-- 语音说明 -->
+          <p style="font-size:0.95rem;color:#555;margin-bottom:0.8rem;">
+            💡 语音输入：点击每个输入框旁边的 🎤 按钮说话即可
+          </p>
+          
+          <!-- 文本提取 -->
+          <p style="font-size:0.95rem;color:#555;margin-bottom:0.5rem;">
+            📋 文本提取：粘贴合同/聊天记录，自动填表
+          </p>
+          <textarea id="extractText" rows="3" placeholder="粘贴合同内容、微信聊天记录等文本..." style="width:100%;padding:0.6rem;border:2px solid #90caf9;border-radius:8px;font-size:0.95rem;font-family:inherit;margin-bottom:0.5rem;box-sizing:border-box;"></textarea>
+          <button class="btn-primary" style="padding:0.6rem 1.2rem;font-size:0.95rem;" onclick="extractFromText()">🔍 一键提取填充表单</button>
+        </div>
+        <!-- 手动填写 -->
+        <h3 style="margin-bottom:1rem;">📝 手动填写（或提取后修改）</h3>
+        
+        <!-- 工程信息 -->
+        <h3 style="margin-bottom:1rem;">📋 工程基本信息</h3>
+        <div class="form-group">
+          <label>工程名称 * <button type="button" onclick="startVoice('projectName')" style="background:none;border:none;cursor:pointer;font-size:1.2rem;" title="点击语音输入">🎤</button></label>
+          <input type="text" id="projectName" placeholder="例如：某某花园一期工程">
+        </div>
+        <div class="form-group">
+          <label>工程地点 *</label>
+          <input type="text" id="projectAddress" placeholder="工程所在地址">
+        </div>
+        <div class="form-group">
+          <label>劳务作业内容 *</label>
+          <input type="text" id="workContent" placeholder="例如：主体结构钢筋工程、模板工程等">
+        </div>
+        <!-- 甲方（承包人）信息 -->
+        <h3 style="margin-bottom:1rem;margin-top:1.5rem;">🏢 甲方（承包人/总包方）</h3>
+        <div class="form-group">
+          <label>公司名称 *</label>
+          <input type="text" id="companyName" placeholder="总承包公司全称">
+        </div>
+        <div class="form-group">
+          <label>统一社会信用代码</label>
+          <input type="text" id="companyCode" placeholder="例如：91440300XXXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label>法定代表人 *</label>
+          <input type="text" id="companyLeader" placeholder="公司法人姓名">
+        </div>
+        <div class="form-group">
+          <label>联系电话</label>
+          <input type="tel" id="companyPhone" placeholder="公司联系电话">
+        </div>
+        <!-- 乙方（劳务分包人）信息 -->
+        <h3 style="margin-bottom:1rem;margin-top:1.5rem;">👷 乙方（劳务分包人/班组）</h3>
+        <div class="form-group">
+          <label>班组/负责人姓名 *</label>
+          <input type="text" id="workerName" placeholder="班组负责人或个人姓名">
+        </div>
+        <div class="form-group">
+          <label>身份证号 *</label>
+          <input type="text" id="workerIdCard" placeholder="18位身份证号码">
+        </div>
+        <div class="form-group">
+          <label>联系电话 *</label>
+          <input type="tel" id="workerPhone" placeholder="联系电话">
+        </div>
+        <div class="form-group">
+          <label>家庭住址</label>
+          <input type="text" id="workerAddress" placeholder="通讯地址">
+        </div>
+        <!-- 合同期限 -->
+        <h3 style="margin-bottom:1rem;margin-top:1.5rem;">📅 合同期限</h3>
+        <div class="form-group">
+          <label>计划开工日期 *</label>
+          <input type="date" id="contractStart">
+        </div>
+        <div class="form-group">
+          <label>计划完工日期 *</label>
+          <input type="date" id="contractEnd">
+        </div>
+        <div class="form-group">
+          <label>工期总天数</label>
+          <input type="number" id="totalDays" placeholder="例如：180天">
+        </div>
+        <!-- 合同价款 -->
+        <h3 style="margin-bottom:1rem;margin-top:1.5rem;">💰 合同价款</h3>
+        <div class="form-group">
+          <label>签约合同价（大写） *</label>
+          <input type="text" id="totalPrice" placeholder="例如：人民币壹佰万元整">
+        </div>
+        <div class="form-group">
+          <label>小写金额</label>
+          <input type="text" id="totalPriceNum" placeholder="例如：¥1,000,000 元">
+        </div>
+        <div class="form-group">
+          <label>价格形式 *</label>
+          <select id="priceType">
+            <option value="1">工作量清单综合单价</option>
+            <option value="2">工种工日单价</option>
+            <option value="3">综合工日单价</option>
+            <option value="4">建筑面积综合单价</option>
+            <option value="5">工程实物量综合单价</option>
+            <option value="6">固定合同总价</option>
+          </select>
+        </div>
+        <!-- 工资发放 -->
+        <h3 style="margin-bottom:1rem;margin-top:1.5rem;">💵 工资发放方式</h3>
+        <div class="form-group">
+          <label>发放方式 *</label>
+          <select id="salaryType">
+            <option value="monthly">按月发放（每月对账后发放）</option>
+            <option value="stage">按工程进度节点发放</option>
+            <option value="complete">完工后一次性结算</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>约定条款</label>
+          <textarea id="salaryNote" rows="2" placeholder="例如：每月25号前发放上月工资，通过银行转账"></textarea>
+        </div>
+        <!-- 工伤保险 -->
+        <h3 style="margin-bottom:1rem;margin-top:1.5rem;">🏥 工伤保险</h3>
+        <div class="form-group">
+          <label>工伤保险约定 *</label>
+          <select id="insuranceType">
+            <option value="project">按项目参加工伤保险</option>
+            <option value="company">由甲方统一购买团体工伤险</option>
+          </select>
+        </div>
+        <!-- 语音输入说明 -->
+        <div class="alert-box" style="margin-top:1rem;background:#e3f2fd;border-color:#2196f3;">
+          <span class="icon">🎤</span>
+          <div>
+            <h4>🎤 语音输入</h4>
+            <p>点击每个输入框旁边的 🎤 按钮，然后说话就能输入信息！</p>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-top:1.5rem;" onclick="generateContract()">📝 生成正式合同</button>
+      </div>
+      <!-- 生成的合同预览 -->
+      <div class="contract-preview" id="generatedContract">
+        <h3 style="margin-bottom:1rem;">📄 生成的劳务分包合同（请核对）</h3>
+        <pre id="contractContent"></pre>
+        <div class="contract-actions">
+          <button class="btn-secondary" onclick="downloadWord()">📄 下载Word</button>
+          <button class="btn-secondary" onclick="printContract()">🖨️ 打印</button>
+        </div>
+      </div>
+    </div>
+    <!-- 上传检查 -->
+    <div class="tab-panel" id="check-tab">
+      <div class="alert-box">
+        <span class="icon">📤</span>
+        <div>
+          <h4>上传合同帮您检查！</h4>
+          <p>把合同文件上传，我们帮您检查有没有问题</p>
+        </div>
+      </div>
+      <div class="form-box">
+        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+          <div class="icon">📄</div>
+          <p>点击上传合同文件<br>支持 PDF、Word、图片</p>
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="handleFileUpload(event)">
+        </div>
+        <!-- 检查结果 -->
+        <div class="check-result" id="checkResult" style="display:none;">
+          <h3 style="margin-bottom:1rem;">🔍 检查结果</h3>
+          
+          <div class="check-item pass">
+            <span class="status">✅</span>
+            <span class="text"><strong>劳动合同书</strong> - 已检测到劳动合同文本</span>
+          </div>
+          
+          <div class="check-item" id="checkCompany">
+            <span class="status">⏳</span>
+            <span class="text">用人单位信息检查...</span>
+          </div>
+          
+          <div class="check-item" id="checkSalary">
+            <span class="status">⏳</span>
+            <span class="text">工资条款检查...</span>
+          </div>
+          
+          <div class="check-item" id="checkInsurance">
+            <span class="status">⏳</span>
+            <span class="text">社会保险条款检查...</span>
+          </div>
+          
+          <div class="check-item" id="checkDanger">
+            <span class="status">⏳</span>
+            <span class="text">违法条款检查（押金、扣证等）...</span>
+          </div>
+          <div class="alert-box" style="margin-top:1.5rem;background:#e8f5e9;border-color:var(--success);">
+            <span class="icon">💡</span>
+            <div>
+              <h4>温馨提示</h4>
+              <p>这是初步检查，仅供参考。具体合同问题建议<strong>找律师看一下</strong>或拨打<strong>12348</strong>法律援助热线咨询。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 检查清单 -->
+    <div class="tab-panel" id="checklist-tab">
+      <div class="alert-box">
+        <span class="icon">✅</span>
+        <div>
+          <h4>签合同前，对照检查！</h4>
+          <p>这8条必须有，缺一条都别签！</p>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <h3><span class="icon">🏢</span> 1. 公司信息</h3>
+          <p>公司叫啥？在哪？老板是谁？</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">👤</span> 2. 您的信息</h3>
+          <p>名字、身份证号、住址要对</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">📅</span> 3. 合同期限</h3>
+          <p>从哪一天干到哪一天</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">🔨</span> 4. 干什么活</h3>
+          <p>具体工种、工作地点</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">⏰</span> 5. 工作时间</h3>
+          <p>每天几小时、每周休息几天</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">💵</span> 6. 工资多少</h3>
+          <p>每月多少钱、几号发</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">🏥</span> 7. 保险</h3>
+          <p>工伤保险必须有！</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon">🦺</span> 8. 安全防护</h3>
+          <p>安全帽、安全带等防护</p>
+        </div>
+      </div>
+      <div class="alert-box" style="background:#ffebee;border-color:var(--danger);margin-top:1.5rem;">
+        <span class="icon">🚫</span>
+        <div>
+          <h4>这些条款千万不能签！</h4>
+          <p>看到"工伤自负"、"自愿放弃社保"、"押金"、"扣证件"——<strong>别签！</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== STAGE 3: RIGHTS PROTECTION ===== -->
+<section class="section" id="stage3" style="background:#fff5f0;">
+  <div class="section-inner">
+    <h2 class="section-title">第三步：权益受到侵害怎么办</h2>
+    <p class="section-subtitle">按步骤走，肯定能维权成功！</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h4>📁 先收集证据</h4>
+          <p>合同、工资条、聊天记录、录音、证人电话、工作照片</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h4>💬 找老板谈</h4>
+          <p>直接说明问题，设定一个合理期限</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h4>📞 打12333</h4>
+          <p>人社局帮您维权 | <a href="tel:12333" style="color:var(--primary);font-weight:700;">点击拨打</a></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <h4>⚖️ 申请仲裁</h4>
+          <p>劳动仲裁委员会裁决 | 免费 | 45天内结案</p>
+          <a href="legal-ai.html" style="display:inline-block;margin-top:8px;padding:6px 12px;background:#2e7d32;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;">🤖 AI智能生成</a>
+          <a href="legal-docs.html#arbitration" style="display:inline-block;margin-top:8px;padding:6px 12px;background:#4caf50;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;margin-left:8px;">📝 生成仲裁书</a>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div>
+          <h4>🏛️ 去法院</h4>
+          <p>法院强制执行 | 农民工可申请法律援助</p>
+          <a href="legal-ai.html" style="display:inline-block;margin-top:8px;padding:6px 12px;background:#1976d2;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;">🤖 AI智能生成</a>
+          <a href="legal-docs.html#lawsuit-form" style="display:inline-block;margin-top:8px;padding:6px 12px;background:#2196f3;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;margin-left:8px;">📝 生成起诉状</a>
+        </div>
+      </div>
+    </div>
+    <!-- Cases -->
+    <h3 style="text-align:center;margin:2rem 0 1rem;font-size:1.4rem;">📊 真实案例（法院判决）</h3>
+    <div class="card-grid">
+      <div class="card" style="border-left:4px solid #d4380d;">
+        <h3><span class="icon">⚖️</span> 恶意欠薪被判刑</h3>
+        <p><strong>案情：</strong>赵某承包工程后拖欠51名农民工工资55万余元，经人社局责令支付后仍逃匿拒付。</p>
+        <p><strong>判决：</strong>法院判处赵某有期徒刑1年，罚金1万元。工资全部追回！</p>
+        <p style="color:#666;font-size:0.85rem;">来源：资兴市人民法院（2026年）</p>
+        <a href="case-1.html" style="display:inline-block;margin-top:10px;padding:6px 14px;background:#d4380d;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;">📖 查看详情 →</a>
+      </div>
+      <div class="card" style="border-left:4px solid #1d39c4;">
+        <h3><span class="icon">🏗️</span> 股东连带清偿</h3>
+        <p><strong>案情：</strong>某建设公司拖欠14名瓦工64.9万元工资，公司无财产但股东抽逃出资。</p>
+        <p><strong>判决：</strong>法院追加7名股东为被执行人，全部工资及延迟履行金40.47万元全部执行到位！</p>
+        <p style="color:#666;font-size:0.85rem;">来源：亳州市谯城区人民法院（2025年）</p>
+        <a href="case-2.html" style="display:inline-block;margin-top:10px;padding:6px 14px;background:#1d39c4;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;">📖 查看详情 →</a>
+      </div>
+      <div class="card" style="border-left:4px solid #52c41a;">
+        <h3><span class="icon">💼</span> 差旅费也赔偿</h3>
+        <p><strong>案情：</strong>4名农民工被拖欠工资7.25万元，讨薪产生差旅费用。</p>
+        <p><strong>判决：</strong>法院支持工资7.25万元+差旅费3702元，公司已主动履行！</p>
+        <p style="color:#666;font-size:0.85rem;">来源：浙江法院（2025年）</p>
+        <a href="case-3.html" style="display:inline-block;margin-top:10px;padding:6px 14px;background:#52c41a;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;">📖 查看详情 →</a>
+      </div>
+      <div class="card" style="border-left:4px solid #faad14;">
+        <h3><span class="icon">🏛️</span> 假外包真派遣</h3>
+        <p><strong>案情：</strong>某科技公司通过"外包"规避派遣责任，拖欠员工工资。</p>
+        <p><strong>判决：</strong>法院认定"假外包真派遣"，科技公司作为用工单位与外包公司共同支付欠发工资！</p>
+        <p style="color:#666;font-size:0.85rem;">来源：北京市第三中级人民法院（2025年）</p>
+        <a href="case-4.html" style="display:inline-block;margin-top:10px;padding:6px 14px;background:#faad14;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;">📖 查看详情 →</a>
+      </div>
+      <div class="card" style="border-left:4px solid #9c27b0;">
+        <h3><span class="icon">🏥</span> 工伤赔偿到位</h3>
+        <p><strong>案情：</strong>黄某在工地施工时从爬梯跌落受伤，被认定为工伤，仲裁裁决公司支付12.4万元。</p>
+        <p><strong>判决：</strong>公司逾期未付，法院强制执行，执行法官多次沟通后公司全额支付！</p>
+        <p style="color:#666;font-size:0.85rem;">来源：达拉特旗人民法院（2025年）</p>
+        <a href="case-5.html" style="display:inline-block;margin-top:10px;padding:6px 14px;background:#9c27b0;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;">📖 查看详情 →</a>
+      </div>
+      <div class="card" style="border-left:4px solid #00bcd4;">
+        <h3><span class="icon">💪</span> 工伤十级伤残</h3>
+        <p><strong>案情：</strong>熊某在工地锯木板时手指骨折，被鉴定为十级伤残，仲裁裁决公司支付6.4万元。</p>
+        <p><strong>判决：</strong>公司不履行，法院冻结账户后，公司当天全额支付！</p>
+        <p style="color:#666;font-size:0.85rem;">来源：南充市顺庆区法院（2025年）</p>
+        <a href="case-6.html" style="display:inline-block;margin-top:10px;padding:6px 14px;background:#00bcd4;color:white;border-radius:6px;text-decoration:none;font-size:0.9rem;">📖 查看详情 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== LAWS ===== -->
+<section class="section" id="laws">
+  <div class="section-inner">
+    <h2 class="section-title"><a href="laws-detail.html" style="color:inherit;text-decoration:none;">学点法律</a> <a href="laws-detail.html" style="font-size:0.8rem;color:#1d39c4;">(查看详细)</a></h2>
+    <p class="section-subtitle">知道这些，老板不敢欺负您</p>
+    <div class="law-item">
+      <h4>📜 劳动法</h4>
+      <div class="highlight">
+        <strong>第3条</strong>：劳动者享有平等就业、取得劳动报酬、休息休假、安全保护、接受培训、社保福利等权利！<br><br>
+        <strong>第50条</strong>：工资按月以货币形式支付，不得克扣或拖欠！<br><br>
+        <strong>第51条</strong>：法定节假日、婚丧假期间也要发工资！<br><br>
+        <strong>第72条</strong>：用人单位和劳动者必须依法参加社会保险！<br><br>
+        <strong>第91条</strong>：拖欠工资、拒不支付加班费、低于最低工资标准、不给经济补偿，需赔偿！
+      </div>
+      <p style="margin-top:12px;font-size:0.9rem;color:#666;">💡 <strong>通俗解释：</strong>老板必须每个月按时发工资，节假日不上班也要发工资！社保必须交！拖欠工资除了补发，还要额外赔偿！</p>
+    </div>
+    <div class="law-item">
+      <h4>📜 劳动合同法</h4>
+      <div class="highlight">
+        <strong>第10条</strong>：建立劳动关系需订立书面合同！<br><br>
+        <strong>第17条</strong>：合同必须写明工资、工作内容、工作时间、社保等！<br><br>
+        <strong>第82条</strong>：不签合同满1个月赔双倍；不签无固定期限合同也赔双倍！<br><br>
+        <strong>第87条</strong>：违法解除劳动合同要赔双倍！
+      </div>
+      <p style="margin-top:12px;font-size:0.9rem;color:#666;">💡 <strong>通俗解释：</strong>上班必须签合同！合同内容要写清楚！没签合同从第2个月起赔双倍！违法辞退也要赔双倍！</p>
+    </div>
+    <div class="law-item">
+      <h4>📜 保障农民工工资支付条例</h4>
+      <div class="highlight">
+        <strong>第3条</strong>：农民工有按时足额获得工资的权利，任何单位或个人不得拖欠！<br><br>
+        <strong>第7条</strong>：人社局牵头+多部门联动（住建/公安/发改委/财政等）保障工资！<br><br>
+        <strong>第11条</strong>：工程建设领域实行工资专用账户管理，专款专用！
+      </div>
+      <p style="margin-top:12px;font-size:0.9rem;color:#666;">💡 <strong>通俗解释：</strong>这是专门保护农民工的条例！多个部门一起管这事，即使包工头跑了，政府也会帮你讨薪！工资必须专用账户！</p>
+    </div>
+    <div class="law-item">
+      <h4>📜 建筑法</h4>
+      <div class="highlight">
+        <strong>第47条</strong>：建筑施工企业必须加强安全生产管理！<br><br>
+        <strong>第48条</strong>：必须为职工购买意外伤害保险！
+      </div>
+      <p style="margin-top:12px;font-size:0.9rem;color:#666;">💡 <strong>通俗解释：</strong>工地干活的必须买意外保险！出了安全事故老板要负责，安全生产是底线！</p>
+    </div>
+    <div class="law-item">
+      <h4>📜 广东省劳动保障监察条例</h4>
+      <div class="highlight">
+        <strong>第22条</strong>：用人单位不得克扣或拖欠劳动者工资！<br><br>
+        <strong>第39条</strong>：违法者将被处以罚款，严重者追究刑事责任！
+      </div>
+      <p style="margin-top:12px;font-size:0.9rem;color:#666;">💡 <strong>通俗解释：</strong>这是广东省的地方法规！老板拖欠工资、不签合同、不买社保都可以向劳动监察部门投诉，监察部门会帮你要钱！</p>
+    </div>
+    <div class="law-item">
+      <h4>📜 劳动争议调解仲裁法</h4>
+      <div class="highlight">
+        <strong>第5条</strong>：劳动争议先调解，调解不成再仲裁！<br><br>
+        <strong>第47条</strong>：追索工资等争议一裁终局！
+      </div>
+      <p style="margin-top:12px;font-size:0.9rem;color:#666;">💡 <strong>通俗解释：</strong>遇到纠纷先找调解员调和，调解不成可以申请仲裁。大部分讨薪案件仲裁就能搞定，不用去法院！</p>
+    </div>
+  </div>
+</section>
+<!-- ===== HOTLINE ===== -->
+<section class="section" id="help" style="background:#fff5f0;">
+  <div class="section-inner">
+    <h2 class="section-title">紧急求助电话</h2>
+    <p class="section-subtitle">记不住就存到手机里！点一下就能打！</p>
+    <div class="phone-display">
+      <a href="tel:12333">
+        <div class="label">最常用的</div>
+        <div class="number">12333</div>
+        <div class="desc">人社服务热线 | 7×24小时 | 点击拨打</div>
+      </a>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <h3><span class="icon">📞</span> <a href="tel:12333" style="color:inherit;text-decoration:none;">12333</a></h3>
+        <p>人社服务热线 | <a href="tel:12333" style="color:var(--primary);font-weight:700;">点击拨打</a></p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">📞</span> <a href="tel:12345" style="color:inherit;text-decoration:none;">12345</a></h3>
+        <p>政府服务热线 | <a href="tel:12345" style="color:var(--primary);font-weight:700;">点击拨打</a></p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">📞</span> <a href="tel:12348" style="color:inherit;text-decoration:none;">12348</a></h3>
+        <p>法律援助热线 | <a href="tel:12348" style="color:var(--primary);font-weight:700;">点击拨打</a></p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">📞</span> <a href="tel:110" style="color:inherit;text-decoration:none;">110</a></h3>
+        <p>报警 | <a href="tel:110" style="color:var(--danger);font-weight:700;">点击拨打</a></p>
+      </div>
+    </div>
+    <div class="alert-box" style="margin-top:2rem;background:#e8f5e9;border-color:var(--success);">
+      <span class="icon">💡</span>
+      <div>
+        <h4>温馨提示</h4>
+        <p>打官司不用花钱！农民工讨薪可以申请<strong>法律援助</strong>，律师免费帮您打官司！</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>🏗️ 农民工维权帮手 —— 依法维权有理</p>
+  <p>本页面内容仅供参考，遇到问题请咨询专业律师</p>
+  <div class="disclaimer">
+    免责声明：本网站提供的模板和建议为参考使用，不构成法律意见。具体案件请咨询律师或法律援助机构。
+  </div>
+</footer>
+<script>
+// ===== Font Size Control =====
+let currentSize = 18;
+function changeFontSize(delta) {
+  currentSize += delta;
+  if (currentSize < 14) currentSize = 14;
+  if (currentSize > 28) currentSize = 28;
+  document.documentElement.style.setProperty('--base-size', currentSize + 'px');
+}
+// ===== Audio / Text to Speech =====
+let isReading = false;
+let isReadingCard = false;
+// 初始化语音
+function initSpeech() {
+  return new Promise((resolve) => {
+    if ('speechSynthesis' in window) {
+      // 尝试获取语音
+      const voices = speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        speechSynthesis.addEventListener('voiceschanged', () => resolve(true), { once: true });
+      } else {
+        resolve(true);
+      }
+    } else {
+      resolve(false);
+    }
+  });
+}
+// 点击卡片播放语音
+document.addEventListener('click', async function(e) {
+  const card = e.target.closest('.card, .step, .law-item');
+  if (card) {
+    const text = card.getAttribute('data-audio') || card.textContent;
+    if (text && text.length > 5) {
+      await initSpeech();
+      speakText(text.substring(0, 300));
+    }
+  }
+});
+function speakText(text) {
+  if (!('speechSynthesis' in window)) {
+    alert('您的浏览器不支持语音播报功能，建议使用Chrome浏览器');
+    return;
+  }
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'zh-CN';
+  utterance.rate = 0.85;
+  utterance.pitch = 1;
+  
+  // 尝试使用中文语音
+  const voices = speechSynthesis.getVoices();
+  const chineseVoice = voices.find(v => v.lang.includes('zh'));
+  if (chineseVoice) {
+    utterance.voice = chineseVoice;
+  }
+  
+  utterance.onerror = function(e) {
+    console.log('语音播放出错:', e);
+  };
+  
+  speechSynthesis.speak(utterance);
+}
+function toggleAudio() {
+  const btn = document.getElementById('audioBtn');
+  if (isReading) {
+    speechSynthesis.cancel();
+    isReading = false;
+    btn.classList.remove('audio-on');
+    btn.textContent = '🔊';
+    document.querySelectorAll('.reading').forEach(el => el.classList.remove('reading'));
+    return;
+  }
+  
+  let elementsToRead = [];
+  document.querySelectorAll('.card, .step, .law-item, .alert-box, .phone-display').forEach(el => {
+    const text = el.getAttribute('data-audio') || el.textContent;
+    if (text) elementsToRead.push(text.trim().substring(0, 200));
+  });
+  
+  if (elementsToRead.length === 0) {
+    alert('没有可朗读的内容');
+    return;
+  }
+  
+  isReading = true;
+  btn.classList.add('audio-on');
+  btn.textContent = '⏹️';
+  
+  readNext(0, elementsToRead);
+}
+function readNext(index, list) {
+  if (!isReading || index >= list.length) {
+    isReading = false;
+    document.getElementById('audioBtn').classList.remove('audio-on');
+    document.getElementById('audioBtn').textContent = '🔊';
+    return;
+  }
+  
+  const utterance = new SpeechSynthesisUtterance(list[index]);
+  utterance.lang = 'zh-CN';
+  utterance.rate = 0.9;
+  utterance.onend = function() { readNext(index + 1, list); };
+  speechSynthesis.speak(utterance);
+}
+// ===== Tab Switching =====
+function switchTab(event, tabId) {
+  const tabBtns = event.target.parentElement.querySelectorAll('.tab-btn');
+  tabBtns.forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  const panels = event.target.parentElement.parentElement.querySelectorAll('.tab-panel');
+  panels.forEach(panel => panel.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+}
+// ===== Generate Contract =====
+function generateContract() {
+  // 获取表单数据 - 工程信息
+  const projectName = document.getElementById('projectName').value || '___________';
+  const projectAddress = document.getElementById('projectAddress').value || '___________';
+  const workContent = document.getElementById('workContent').value || '___________';
+  
+  // 甲方（承包人）信息
+  const companyName = document.getElementById('companyName').value || '___________';
+  const companyCode = document.getElementById('companyCode').value || '___________';
+  const companyLeader = document.getElementById('companyLeader').value || '___________';
+  const companyPhone = document.getElementById('companyPhone').value || '___________';
+  
+  // 乙方（劳务分包人）信息
+  const workerName = document.getElementById('workerName').value || '___________';
+  const workerIdCard = document.getElementById('workerIdCard').value || '___________';
+  const workerPhone = document.getElementById('workerPhone').value || '___________';
+  const workerAddress = document.getElementById('workerAddress').value || '___________';
+  
+  // 合同期限
+  const contractStart = document.getElementById('contractStart').value || '___________';
+  const contractEnd = document.getElementById('contractEnd').value || '___________';
+  const totalDays = document.getElementById('totalDays').value || '___________';
+  
+  // 合同价款
+  const totalPrice = document.getElementById('totalPrice').value || '___________';
+  const totalPriceNum = document.getElementById('totalPriceNum').value || '___________';
+  const priceType = document.getElementById('priceType').value;
+  const priceTypes = ['', '工作量清单综合单价', '工种工日单价', '综合工日单价', '建筑面积综合单价', '工程实物量综合单价', '固定合同总价'];
+  const priceTypeText = priceTypes[parseInt(priceType)] || '工作量清单综合单价';
+  
+  // 工资发放
+  const salaryType = document.getElementById('salaryType').value;
+  const salaryTypes = { 'monthly': '按月发放（每月对账后发放）', 'stage': '按工程进度节点发放', 'complete': '完工后一次性结算' };
+  const salaryTypeText = salaryTypes[salaryType] || '按月发放';
+  const salaryNote = document.getElementById('salaryNote').value || '每月25号前发放上月工资，通过银行转账';
+  
+  // 工伤保险
+  const insuranceType = document.getElementById('insuranceType').value;
+  const insuranceText = insuranceType === 'project' ? '按项目参加工伤保险' : '由甲方统一购买团体工伤险';
+  
+  // 获取当前日期
+  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '年').replace(/(\d{2})/g, '$1月').replace('年', '').replace('月', '日');
+  
+  // 生成合同内容 - 按照深圳市劳务分包合同格式
+  const contractText = `
+
+                        深圳市建设工程施工劳务分包合同
+                              （2022年版）
+
+工程编号：                      合同编号：
+【工程基本信息】
+工程名称：${projectName}
+工程地点：${projectAddress}
+劳务作业内容：${workContent}
+
+                           第一部分  协议书
+
+承包人(全称)：${companyName}
+统一社会信用代码：${companyCode}
+法定代表人：${companyLeader}
+联系电话：${companyPhone}
+劳务分包人(全称)：${workerName}
+身份证号码：${workerIdCard}
+联系电话：${workerPhone}
+通讯地址：${workerAddress}
+根据《中华人民共和国民法典》《中华人民共和国建筑法》《保障农民工工资支付条例》
+及有关法律、法规，结合本工程实际情况，遵守平等、自愿、公平和诚实信用原则，
+双方就本建设工程劳务分包事项协商一致，订立本合同，达成协议如下：
+一、工程概况
+工程名称：${projectName}
+工程地点：${projectAddress}
+二、劳务作业的范围和内容
+劳务作业范围：${workContent}
+劳务作业内容：${workContent}
+三、劳务作业工期
+劳务作业计划开工日期：${contractStart}
+劳务作业计划完工日期：${contractEnd}
+工期总日历天数为：${totalDays}天
+四、工作成果的质量标准
+按国家、地方或行业施工质量验收标准、规范、规程执行
+五、签约合同价
+5.1 签约合同价（含税）为：
+人民币（大写）${totalPrice} (¥${totalPriceNum}元)
+5.2 本合同采用的价格形式为：${priceTypeText}
+六、合同文件的组成
+下列文件为本合同的组成部分，共同构成合同文件：
+⑴ 合同协议书
+⑵ 合同补充条款
+⑶ 合同专用条款及其附件
+⑷ 合同通用条款
+⑸ 技术标准和要求
+⑹ 图纸
+⑺ 已标价的工作量清单或者报价清单
+⑻ 其他合同文件
+七、承诺
+1. 承包人承诺施工项目已经按照法律、法规的规定办理相关施工的审批或者备案
+   手续，并保证按照合同约定以及法律、法规规定的时间和方式向劳务分包人
+   支付合同价款。
+2. 劳务分包人承诺按照法律、法规、标准、规范的规定以及合同约定完成劳务
+   施工作业工作，确保工程质量和安全。
+八、合同订立与生效
+本合同订立时间：${today}
+订立地点：本合同施工现场
+本合同一式 2 份，均具有同等法律效力，承包人执 1 份，劳务分包人执 1 份。
+
+                           第二部分  通用条款（摘要）
+
+【重要条款摘录】
+2.10 承包人义务
+承包人应按时足额向劳务分包人支付本合同约定的合同价款。
+2.11 安全管理
+承包人应遵守安全技术规范和法律法规的要求，制定安全防护措施，提供安全
+防护设备，确保施工安全。
+2.13 工伤保险
+承包人应按照法律法规的规定，为本项目作业人员办理工伤保险。
+3.1 劳务分包人义务
+劳务分包人应对本合同劳务分包范围内的劳务作业成果质量向承包人负责。
+5.2.4 工资发放
+劳务分包人的劳务工人工资由承包人通过劳务工人工资专用账户进行代发。承包人
+通过劳务工人工资专用账户直接将工资支付到劳务工人本人的银行账户。
+5.2.5 禁止扣押
+劳务工人工资专用账户所绑定的劳务工人本人的社会保障卡或者银行卡，劳务分包人
+或者其他人员不得以任何理由扣押或者变相扣押。
+
+                           第三部分  专用条款约定
+
+一、工资发放约定
+工资发放方式：${salaryTypeText}
+具体约定：${salaryNote}
+二、工伤保险约定
+${insuranceText}
+三、进场实名制管理
+1. 劳务分包人应在人员进场前，依法与招用的劳务工人签订劳动合同。
+2. 劳务分包人应按照实名制管理要求采集人员信息，并向承包人如实申报。
+3. 劳务分包人雇佣的劳务作业人员应在进场作业前完成质量安全基础训练。
+四、安全生产约定
+1. 劳务分包人应科学安排作业计划，投入足够的人力、物力，保证工期。
+2. 劳务分包人应加强安全教育，认真执行有关安全管理规定，做到文明施工。
+3. 劳务分包人应承担因自身原因造成的质量返修、返工、工期拖延、安全事故等
+   各种损失及罚款。
+五、违约责任
+1. 承包人未按约定支付合同价款，须依法支付违约金或赔偿金。
+2. 劳务分包人擅自解除合同或擅自停工，须承担因此造成的全部损失。
+3. 任何一方违反本合同约定，须依法承担违约责任。
+
+                           签  字  栏
+
+承包人（盖章）：                          劳务分包人（签字）：
+                                         
+法定代表人：                              （手印）
+或委托代理人（签字）：
+日期：     年   月   日                   日期：     年   月   日
+
+                           重 要 提 示
+
+1. 本合同一式两份，甲乙双方各执一份，具有同等法律效力。
+2. 签订合同前，请仔细阅读每一条款，不明白的地方要问清楚。
+3. 口头承诺必须写入合同，白纸黑字才能保护自己。
+4. 签完字后，自己必须保留一份原件！
+5. 任何"工伤自负"、"放弃社保"、"押金"、"扣证件"的条款都是违法的，不要签！
+6. 工资必须通过银行转账发放到个人账户，不能现金发放！
+7. 农民工工资不能拖欠，年底前必须结清！
+8. 遇到问题可拨打：12333（人社）、12348（法律援助）
+
+`;
+  document.getElementById('contractContent').textContent = contractText;
+  document.getElementById('generatedContract').classList.add('show');
+  
+  // 滚动到生成的合同
+  document.getElementById('generatedContract').scrollIntoView({ behavior: 'smooth' });
+}
+// ===== Download Contract =====
+function downloadContract() {
+  const content = document.getElementById('contractContent').textContent;
+  const projectName = document.getElementById('projectName').value || '项目';
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '劳务分包合同_' + projectName + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+// ===== Print Contract =====
+function printContract() {
+  const content = document.getElementById('contractContent').textContent;
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write('<html><head><title>劳动合同</title></head><body><pre style="font-family:宋体;font-size:14px;line-height:1.6;">' + content + '</pre></body></html>');
+  printWindow.document.close();
+  printWindow.print();
+}
+// ===== File Upload & Check =====
+// ===== 合同检查相关函数 =====
+// 违法条款关键词（坑）
+const dangerKeywords = [
+  { pattern: /工伤自负|工伤免赔|意外自负|放弃工伤/, text: '🚫 工伤自负条款', danger: true },
+  { pattern: /自愿放弃社保|放弃社会保险|不参加社保/, text: '🚫 放弃社保条款', danger: true },
+  { pattern: /押金|保证金|扣押.*证件|扣押.*身份证/, text: '🚫 押金/扣证件', danger: true },
+  { pattern: /迟到一次扣|旷工一天扣|罚款/, text: '⚠️ 罚款条款', danger: false },
+  { pattern: /无条件解除|随时解除|免费解除/, text: '⚠️ 随时可解雇条款', danger: false },
+  { pattern: /工伤概不负责|意外概不负责/, text: '🚫 免负责任条款', danger: true },
+  { pattern: /不服从安排.*扣|一次.*扣除/, text: '⚠️ 随意扣款条款', danger: false },
+];
+// 关键信息提取规则
+const keyInfoRules = [
+  { pattern: /用人单位[：:]([^\n]{2,30})|公司名称[：:]([^\n]{2,30})|甲方[：:]([^\n]{2,30})/, label: '用人单位', key: 'company' },
+  { pattern: /乙方.*?姓名[：:]([^\n]{2,10})|劳动者[：:]([^\n]{2,10})|工人姓名[：:]([^\n]{2,10})/, label: '劳动者姓名', key: 'workerName' },
+  { pattern: /身份证[号码]*[：:]([0-9X]{15,20})/, label: '身份证号', key: 'idCard' },
+  { pattern: /工资[：:￥¥]*(\d{1,5})(?:元|块)|月.*?工资[：:￥¥]*(\d{1,5})|每日.*?(\d{1,4})元/, label: '工资', key: 'salary' },
+  { pattern: /合同期限[：:]*(?:从|自)?(\d{4}[年/-]\d{1,2}[月/-]\d{1,2}).*?(?:到|至|结束)(\d{4}[年/-]\d{1,2}[月/-]\d{1,2})|期限[：:]*(\d+)年.*?(\d+)月/, label: '合同期限', key: 'period' },
+  { pattern: /工作地点[：:]([^\n]{2,30})|施工地点[：:]([^\n]{2,30})|工程地址[：:]([^\n]{2,30})/, label: '工作地点', key: 'workPlace' },
+  { pattern: /工种[：:]([^\n]{2,10})|岗位[：:]([^\n]{2,10})|从事[：:]([^\n]{2,10})/, label: '工种', key: 'workType' },
+  { pattern: /工伤保险|社会保险|社保|养老保险|医疗保险/, label: '社会保险', key: 'insurance', found: true },
+  { pattern: /每月.*?(?:支付|发放|发放)[：:]*(\d{1,2})日?|(\d{1,2})日.*?发/, label: '发薪日', key: 'payDay' },
+];
+async function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const fileName = file.name;
+  const fileSize = (file.size / 1024).toFixed(2);
+  
+  // 读取文件内容
+  let fileContent = '';
+  try {
+    if (file.name.endsWith('.txt')) {
+      fileContent = await file.text();
+    } else if (file.name.endsWith('.docx')) {
+      alert('Word文件暂不支持直接读取内容。请将合同内容复制到文本文档(.txt)后上传，或对照下方检查清单人工核对。\n\n文件已上传成功，可以继续检查。');
+      fileContent = ''; // 模拟处理
+    } else {
+      alert('暂不支持此格式。建议将合同内容复制到文本文档(.txt)后上传检查。\n\n文件已上传成功，可以继续检查。');
+      fileContent = '';
+    }
+  } catch (e) {
+    console.error('读取文件出错:', e);
+    fileContent = '';
+  }
+  
+  // 显示检查结果区域
+  document.getElementById('checkResult').style.display = 'block';
+  let resultHTML = '<h3 style="margin-bottom:1rem;">🔍 检查结果：' + fileName + '</h3>';
+  
+  // 1. 检查违法条款（坑）
+  resultHTML += '<h4 style="margin:1.5rem 0 1rem;">🚫 合同坑检查</h4>';
+  let foundDanger = false;
+  for (const kw of dangerKeywords) {
+    if (kw.pattern.test(fileContent)) {
+      const status = kw.danger ? 'fail' : 'warn';
+      const icon = kw.danger ? '❌' : '⚠️';
+      resultHTML += `<div class="check-item ${status}">
+        <span class="status">${icon}</span>
+        <span class="text"><strong>发现${kw.danger ? '违法' : '不利'}条款：</strong>${kw.text}</span>
+      </div>`;
+      foundDanger = true;
+    }
+  }
+  if (!foundDanger) {
+    resultHTML += `<div class="check-item pass">
+      <span class="status">✅</span>
+      <span class="text">未发现明显违法条款，请继续核对下方关键信息</span>
+    </div>`;
+  }
+  
+  // 2. 提取关键信息
+  resultHTML += '<h4 style="margin:1.5rem 0 1rem;">📋 关键信息提取</h4>';
+  const extractedInfo = {};
+  for (const rule of keyInfoRules) {
+    const match = fileContent.match(rule.pattern);
+    if (match) {
+      const value = match[1] || match[2] || match[3] || (rule.found ? '有提及' : '');
+      if (value && value.trim()) {
+        extractedInfo[rule.key] = { label: rule.label, value: value.trim() };
+      }
+    }
+  }
+  
+  if (Object.keys(extractedInfo).length > 0) {
+    resultHTML += '<div style="background:#f5f5f5;padding:1rem;border-radius:10px;margin-bottom:1rem;">';
+    for (const [key, info] of Object.entries(extractedInfo)) {
+      resultHTML += `<p style="margin:0.5rem 0;"><strong>${info.label}：</strong>${info.value}</p>`;
+    }
+    resultHTML += '</div>';
+  } else {
+    resultHTML += `<div class="check-item warn">
+      <span class="status">⚠️</span>
+      <span class="text">未能自动提取关键信息，请对照检查清单人工核对</span>
+    </div>`;
+  }
+  
+  // 3. 缺失的关键条款提醒
+  resultHTML += '<h4 style="margin:1.5rem 0 1rem;">✅ 必备条款检查</h4>';
+  const requiredItems = [
+    { key: 'company', text: '用人单位信息' },
+    { key: 'salary', text: '工资约定' },
+    { key: 'period', text: '合同期限' },
+    { key: 'workPlace', text: '工作地点' },
+    { key: 'workType', text: '工种岗位' },
+    { key: 'insurance', text: '社会保险' },
+  ];
+  
+  for (const item of requiredItems) {
+    const has = extractedInfo[item.key] ? '✅' : '❌';
+    const status = extractedInfo[item.key] ? 'pass' : 'fail';
+    resultHTML += `<div class="check-item ${status}">
+      <span class="status">${has}</span>
+      <span class="text">${item.text}</span>
+    </div>`;
+  }
+  
+  // 4. 温馨提示
+  resultHTML += `<div class="alert-box" style="margin-top:1.5rem;background:#e8f5e9;border-color:var(--success);">
+    <span class="icon">💡</span>
+    <div>
+      <h4>温馨提示</h4>
+      <p>这是初步自动检查，仅供参考。强烈建议：</p>
+      <ul style="margin:0.5rem 0 0 1rem;">
+        <li>仔细阅读合同每一条款</li>
+        <li>不理解的条款要求解释清楚</li>
+        <li>口头承诺一定要写入合同</li>
+        <li>有问题拨打<strong>12348</strong>法律援助热线咨询</li>
+      </ul>
+    </div>
+  </div>`;
+  
+  document.getElementById('checkResult').innerHTML = resultHTML;
+  
+  // 滚动到检查结果
+  document.getElementById('checkResult').scrollIntoView({ behavior: 'smooth' });
+}
+// ===== 语音输入功能 =====
+let recognition = null;
+let currentVoiceField = '';
+function initSpeechRecognition() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('您的浏览器不支持语音输入功能，建议使用Chrome浏览器');
+    return null;
+  }
+  
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SpeechRecognition();
+  rec.continuous = false;
+  rec.interimResults = true;
+  rec.lang = 'zh-CN';
+  
+  rec.onresult = function(event) {
+    let finalTranscript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript;
+      }
+    }
+    if (finalTranscript) {
+      const field = document.getElementById(currentVoiceField);
+      if (field) {
+        field.value = finalTranscript;
+        field.focus();
+      }
+    }
+  };
+  
+  rec.onerror = function(event) {
+    console.log('语音识别错误:', event.error);
+    if (event.error === 'no-speech') {
+      alert('没有检测到语音，请再说一次');
+    } else {
+      alert('语音识别出错: ' + event.error);
+    }
+  };
+  
+  rec.onend = function() {
+    console.log('语音识别结束');
+  };
+  
+  return rec;
+}
+function startVoice(fieldId) {
+  currentVoiceField = fieldId;
+  
+  if (!recognition) {
+    recognition = initSpeechRecognition();
+    if (!recognition) return;
+  }
+  
+  try {
+    recognition.start();
+    alert('请说话，我正在听...（请使用普通话）');
+  } catch (e) {
+    console.log('语音启动错误:', e);
+    alert('语音功能启动失败，请重试');
+  }
+}
+// ===== 文本提取功能 =====
+function extractFromText() {
+  const text = document.getElementById('extractText').value;
+  if (!text || text.trim().length < 10) {
+    alert('请先粘贴合同或聊天记录内容');
+    return;
+  }
+  
+  // 提取各种信息
+  const patterns = {
+    projectName: /(?:工程名称[：:]\s*)([^^\n]{2,30})|项目[名称叫做]([^^\n]{2,20})/i,
+    projectAddress: /(?:工程地点|项目地址)[：:]\s*([^\n]{2,30})/i,
+    companyName: /(?:甲方|承包人|公司|用人单位)[：:]([^\n]{2,30})|公司名称[：:]([^\n]{2,30})/i,
+    companyCode: /(?:统一社会信用代码|信用代码)[：:]\s*([0-9A-Z]{18})/i,
+    companyLeader: /(?:法定代表人|法人|负责人)[：:]\s*([^\n]{2,10})/i,
+    companyPhone: /(?:甲方电话|公司电话|联系电话)[：:]\s*(\d{11})|1[3-9]\d{9}/i,
+    workerName: /(?:乙方|劳务分包人|劳动者|工人|姓名)[：:]([^\n]{2,10})|我叫([^^\n]{2,10})/i,
+    workerIdCard: /(?:身份证号|证件号码)[：:]\s*(\d{17}[\dXx])/i,
+    workerPhone: /(?:乙方电话|工人电话|电话)[：:]\s*(\d{11})|1[3-9]\d{9}/i,
+    workContent: /(?:劳务作业内容|工种|工作内容|从事)[：:]([^\n]{2,30})/i,
+    totalPrice: /(?:合同价|总价|金额)[：:￥¥]*([^\n]{2,30}元)|人民币([^\n]{2,20}元)/i,
+  };
+  
+  let extracted = 0;
+  
+  for (const [fieldId, pattern] of Object.entries(patterns)) {
+    const match = text.match(pattern);
+    if (match) {
+      const value = match[1] || match[2];
+      if (value && value.trim().length > 1) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+          field.value = value.trim();
+          extracted++;
+        }
+      }
+    }
+  }
+  
+  if (extracted > 0) {
+    alert(`✅ 成功提取 ${extracted} 项信息，已填入表单！`);
+  } else {
+    alert('⚠️ 未能提取到信息，请手动填写');
+  }
+}
+// ===== 下载Word功能 =====
+function downloadWord() {
+  const content = document.getElementById('contractContent').textContent;
+  const projectName = document.getElementById('projectName').value || '项目';
+  
+  // 创建HTML格式的内容（可以Word打开）- 和文书格式一致
+  const htmlContent = `
+<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>劳务分包合同</title>
+<style>
+body { font-family: 宋体; font-size: 14pt; line-height: 150%; margin: 0; }
+p { margin: 0; text-indent: 24pt; }
+h1 { text-align: center; font-size: 22pt; font-weight: bold; text-indent: 0; margin-bottom: 12pt; }
+h2 { font-size: 16pt; font-weight: bold; text-indent: 0; margin-top: 12pt; }
+table { width: 100%; border-collapse: collapse; }
+td { border: 1px solid #000; padding: 5px; }
+</style>
+</head>
+<body>
+${content.split('\n').map(line => {
+  if (line.includes('')) return '';
+  if (line.trim() === '') return '<br>';
+  if (line.includes('第') && (line.includes('条') || line.includes('部分') || line.includes('章') || line.includes('款'))) {
+    return `<h2>${line}</h2>`;
+  }
+  if (line.includes('【') || line.includes('】')) {
+    return `<p style="text-indent:0;font-weight:bold;">${line}</p>`;
+  }
+  return `<p>${line}</p>`;
+}).join('\n')}
+</body>
+</html>`;
+  
+  const blob = new Blob([htmlContent], { type: 'application/vnd.ms-word;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '劳务分包合同_' + projectName + '.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>

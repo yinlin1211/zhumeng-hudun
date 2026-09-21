@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>案例详情 - 农民工维权帮手</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --primary: #d4380d;
+  --primary-light: #ff7a45;
+  --secondary: #1d39c4;
+  --bg: #fafafa;
+  --text: #262626;
+  --text-secondary: #595959;
+}
+body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; padding-bottom: 2rem; }
+.container { max-width: 800px; margin: 0 auto; padding: 1rem; }
+.header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 2rem 1rem; text-align: center; }
+.header h1 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+.header a { color: white; text-decoration: none; font-size: 1rem; }
+.btn-back { display: inline-block; background: var(--secondary); color: white; padding: 0.6rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 1rem; }
+.case-card { background: white; border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+.case-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 1rem; margin-bottom: 1rem; }
+.case-title { font-size: 1.4rem; color: var(--primary); margin-bottom: 0.5rem; }
+.case-meta { color: var(--text-secondary); font-size: 0.9rem; }
+.case-section { margin-bottom: 1.2rem; }
+.case-section h4 { color: var(--secondary); font-size: 1.1rem; margin-bottom: 0.5rem; }
+.case-section p { text-indent: 2em; }
+.case-result { background: #f6ffed; border: 2px solid #52c41a; border-radius: 12px; padding: 1rem; }
+.case-result h4 { color: #52c41a; }
+.warning { background: #fff7e6; border: 2px solid #faad14; border-radius: 12px; padding: 1rem; margin-top: 1rem; }
+.warning h4 { color: #faad14; }
+.tip { background: #e6f7ff; border: 2px solid #1890ff; border-radius: 12px; padding: 1rem; margin-top: 1rem; }
+.tip h4 { color: #1890ff; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>⚖️ 案例详情</h1>
+  <a href="index.html">← 返回首页</a>
+</div>
+
+<div class="container">
+  <a href="index.html" class="btn-back">← 返回首页</a>
+
+  <!-- 案例导航 -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;">
+    <a href="case-1.html" class="btn-back" style="background:#d4380d;">案例一：恶意欠薪被判刑</a>
+    <a href="case-2.html" class="btn-back" style="background:#1d39c4;">案例二：股东连带清偿</a>
+    <a href="case-3.html" class="btn-back" style="background:#52c41a;">案例三：差旅费赔偿</a>
+    <a href="case-4.html" class="btn-back" style="background:#faad14;">案例四：假外包真派遣</a>
+    <a href="case-5.html" class="btn-back" style="background:#9c27b0;">案例五：工伤赔偿</a>
+    <a href="case-6.html" class="btn-back" style="background:#00bcd4;">案例六：十级伤残</a>
+  </div>
+
+  <!-- 案例1 -->
+  <div class="case-card" id="case1">
+    <div class="case-header">
+      <h2 class="case-title">案例一：恶意欠薪55万被判刑1年</h2>
+      <p class="case-meta">📍 湖南省资兴市人民法院 | （2026年）湘1081刑初XX号</p>
+    </div>
+    
+    <div class="case-section">
+      <h4>📋 基本案情</h4>
+      <p>2023年11月，被告人赵某的公司承包某水泥公司的管道安装工程项目，赵某为实际施工者。2024年春节前，赵某聘请李某等51人实施该项目，该项目一直施工至2024年6月19日。</p>
+      <p>工程施工期间，被告人赵某先后收到工程款120万元。但自2024年4月起，赵某开始拖欠李某等51名劳动者的工资，至工程完工共拖欠工资55万余元。</p>
+    </div>
+
+    <div class="case-section">
+      <h4>📞 讨薪经过</h4>
+      <p>51名劳动者多次向赵某讨要工资，但赵某一直拖延、回避，并以各种借口不予支付。</p>
+      <p>2024年8月，51名劳动者先后到资兴市人力资源和社会保障局投诉。2024年8月26日，该局组织调解，双方达成协议：赵某委托发包方公司在应付工程款范围内代支付17万余元，剩下拖欠的38万余元工资由赵某于2024年11月30日前一次性付清。</p>
+      <p>然而，协议达成之后，赵某仍未按约定支付。</p>
+    </div>
+
+    <div class="case-section">
+      <h4>🚫 恶意逃匿</h4>
+      <p>2024年12月3日，资兴市人力资源和社会保障局向赵某送达《劳动保障监察限期改正指令书》，责令其5日内支付38万余元工资。</p>
+      <p>赵某收到通知后，不仅未按时支付，且极不配合解决问题：以拒接电话、更换电话卡、远赴外省等逃匿方法逃避支付劳动报酬。</p>
+    </div>
+
+    <div class="case-result">
+      <h4>⚖️ 判决结果</h4>
+      <p><strong>刑事判决：</strong>被告人赵某以逃匿的方法逃避支付劳动者的劳动报酬38万余元，数额较大，经政府有关部门责令支付仍不支付，其行为已构成拒不支付劳动报酬罪。</p>
+      <p>因赵某有坦白、认罪认罚等从轻处罚情节，遂判处：</p>
+      <ul style="margin-left: 1.5rem;">
+        <li>有期徒刑一年，罚金人民币一万元</li>
+        <li>当庭认罪服判</li>
+      </ul>
+      <p style="margin-top:0.5rem;"><strong>执行结果：</strong>2025年7月，该工程发包方代赵某支付38万余元至资兴市人力资源和社会保障局农民工专用账户，51名劳动者的劳动报酬已全部发放完毕！</p>
+    </div>
+
+    <div class="warning">
+      <h4>⚠️ 法律警示</h4>
+      <p><strong>《刑法》第276条之一：</strong>以转移财产、逃匿等方法逃避支付劳动者的劳动报酬或者有能力支付而不支付劳动者的劳动报酬，数额较大，经政府有关部门责令支付仍不支付的，处三年以下有期徒刑或者拘役，并处或者单处罚金。</p>
+      <p style="margin-top:0.5rem;">恶意欠薪不仅是民事纠纷，更是<strong>刑事犯罪</strong>！</p>
+    </div>
+  </div>
+
+  <!-- 案例2 -->
+  <div class="case-card" id="case2">
+    <div class="case-header">
+      <h2 class="case-title">案例二：股东抽逃出资，全额清偿+赔偿40万</h2>
+      <p class="case-meta">📍 安徽省亳州市谯城区人民法院 | （2025年）皖18XX执XX号</p>
+    </div>
+    
+    <div class="case-section">
+      <h4>📋 基本案情</h4>
+      <p>某建设公司承建亳州某拆迁还原工程期间，雇佣谢某等14人从事瓦工工作。工程竣工后，因拖欠劳动报酬，谢某等14人将某建设公司诉至谯城区人民法院。</p>
+      <p>法院审理后依法判令该公司支付谢某等14人劳务报酬共计<strong>64.9万元</strong>。判决生效后，公司仍未履行付款义务，14人遂向法院申请强制执行。</p>
+    </div>
+
+    <div class="case-section">
+      <h4>🔍 执行难题</h4>
+      <p>执行过程中，法院调查发现：</p>
+      <ul style="margin-left: 1.5rem;">
+        <li>被执行人某建设公司名下<strong>无任何可供执行财产</strong></li>
+        <li>公司相关负责人<strong>失联</strong></li>
+      </ul>
+    </div>
+
+    <div class="case-section">
+      <h4>🔎 深入调查</h4>
+      <p>法院依托执行联动机制，拓展查人找物渠道：</p>
+      <p>经深入核查，发现被执行人某建设公司股东存在<strong>抽逃出资</strong>情形。法院依申请裁定追加朱某等7名股东为被执行人，并对其财产展开全面查控。</p>
+      <p>但7名股东也无可供执行财产，法院依法对他们采取限制高消费、纳入失信被执行人名单等惩戒措施。</p>
+    </div>
+
+    <div class="case-section">
+      <h4>🕵️ 财产线索</h4>
+      <p>通过持续深入的调查，法院发现股东张某某曾将其名下一处房产<strong>无偿过户至其子名下</strong>，存在恶意转移财产、规避执行的行为。</p>
+    </div>
+
+    <div class="case-result">
+      <h4>⚖️ 判决结果</h4>
+      <p>根据这条线索，申请执行人依法提起刑事自诉，申请追究张某某<strong>拒不执行判决、裁定罪</strong>。</p>
+      <p>2025年1月，谯城区人民法院立案受理并对张某某决定逮捕。同年5月张某某被逮捕后，其态度发生转变并主动表示愿意履行义务。</p>
+      <p><strong>最终结果：</strong></p>
+      <ul style="margin-left: 1.5rem;">
+        <li>张某某一次性缴清<strong>64.9万元</strong>工资款</li>
+        <li>其余6名股东迅速筹措资金，足额清偿<strong>延迟履行金40.47万元</strong></li>
+        <li>14名农民工全部拿到钱！</li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <h4>💡 维权提示</h4>
+      <p>如果公司没有财产可供执行，可以<strong>追加股东为被执行人</strong>！特别是：</p>
+      <ul style="margin-left: 1.5rem;">
+        <li>股东抽逃出资</li>
+        <li>股东未足额缴纳出资</li>
+        <li>股东转移财产给家人</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 案例3 -->
+  <div class="case-card" id="case3">
+    <div class="case-header">
+      <h2 class="case-title">案例三：讨薪差旅费也由老板买单</h2>
+      <p class="case-meta">📍 浙江省某市人民法院 | （2025年）浙XX民终XX号</p>
+    </div>
+    
+    <div class="case-section">
+      <h4>📋 基本案情</h4>
+      <p>2024年11月至2025年1月，谭某等四人受某公司聘请，在浙江、江苏等地从事家具安装工作。</p>
+      <p>2025年2月，该公司员工甲通过微信给谭某发了一份工资结算单。单据上有项目经理乙的签字，甲还表示该单据已经公司法定代表人审核。</p>
+      <p>该单据明确写着，公司尚欠四人工资等费用合计<strong>72,575元</strong>，承诺2025年3月项目结算完成后会及时支付。</p>
+    </div>
+
+    <div class="case-section">
+      <h4>😤 工资去哪了</h4>
+      <p>可到了3月份，工资却没着落。谭某等人多次找公司催讨，均未得到满意答复。</p>
+      <p>2025年4月，四人向当地劳动人事争议仲裁委员会申请仲裁，但仲裁委员会以"属于其他纠纷"为由，未予受理。</p>
+      <p>最终，谭某等四人向当地人民法院提起诉讼。</p>
+    </div>
+
+    <div class="case-result">
+      <h4>⚖️ 判决结果</h4>
+      <p>法院经审理认为：</p>
+      <p>结合该公司盖章的委托支付函、双方聊天记录、工作打卡图片及对应的支付记录等证据，可以认定甲、乙均为该公司员工。结算单虽未盖章，但有相关证据可以说明原因。</p>
+      <p>考虑到原告为农民工，自我保护及诉讼能力有限，对工资证据的形式不宜要求过于严苛，故对结算单中确认的费用予以支持。</p>
+      <p><strong>判决如下：</strong></p>
+      <ul style="margin-left: 1.5rem;">
+        <li>某公司支付拖欠工资 <strong>72,575元</strong></li>
+        <li>支付因催讨工资产生的<strong>差旅费用3,702元</strong></li>
+      </ul>
+      <p style="margin-top:0.5rem;">案件判决后，双方均未上诉，该判决已生效，且该公司已<strong>主动履行</strong>！</p>
+    </div>
+
+    <div class="tip">
+      <h4>💡 维权提示</h4>
+      <p>讨薪路上花费的<strong>车费、误工费</strong>等合理开支，也可以要求用人单位承担！</p>
+      <p>记得保留好车票、发票等证据哦！</p>
+    </div>
+  </div>
+
+  <!-- 案例4 -->
+  <div class="case-card" id="case4">
+    <div class="case-header">
+      <h2 class="case-title">案例四：假外包真派遣，单位共同担责</h2>
+      <p class="case-meta">📍 北京市第三中级人民法院 | （2025年）京03民终XX号</p>
+    </div>
+    
+    <div class="case-section">
+      <h4>📋 基本案情</h4>
+      <p>贺某于2020年10月起在某网络科技公司某门店担任食品加工员，由该门店直接管理。</p>
+      <p>但某网络科技公司通过<strong>服务合作协议</strong>将贺某所在业务"外包"给第三方某物流公司，贺某实际与某物流公司订立劳动合同。</p>
+    </div>
+
+    <div class="case-section">
+      <h4>😤 侵权行为</h4>
+      <p>工作期间，因某物流公司：</p>
+      <ul style="margin-left: 1.5rem;">
+        <li>未足额支付贺某工资</li>
+        <li>未依法缴纳社会保险费</li>
+      </ul>
+      <p>贺某向劳动人事争议仲裁委员会申请仲裁，后不服裁决，起诉请求某物流公司、某网络科技公司共同支付工资。</p>
+    </div>
+
+    <div class="case-section">
+      <h4>🔍 法院认定</h4>
+      <p>法院经审理发现：</p>
+      <ul style="margin-left: 1.5rem;">
+        <li>某网络科技公司虽然与物流公司签订了"外包"协议</li>
+        <li>但贺某实际上班地点、工作内容、管理方式都没变</li>
+        <li>这实际上是<strong>假外包真派遣</strong>！</li>
+      </ul>
+    </div>
+
+    <div class="case-result">
+      <h4>⚖️ 判决结果</h4>
+      <p>北京市第三中级人民法院于2025年5月作出终审判决：</p>
+      <p><strong>认定某网络科技公司系"假外包真派遣"，其作为用工单位应与用人单位某物流公司共同支付贺某欠发工资！</strong></p>
+    </div>
+
+    <div class="warning">
+      <h4>⚠️ 警惕"外包"陷阱</h4>
+      <p>一些公司为了规避法律责任，故意用"外包"、"合作"等方式逃避派遣责任。但法院会<strong>穿透表象看实质</strong>！</p>
+      <p>只要你在哪个公司上班、受哪个公司管理、领哪个公司发工资，谁就要负责任！</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

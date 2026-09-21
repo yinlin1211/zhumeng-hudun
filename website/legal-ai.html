@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>筑梦护盾 · 农民工维权律师 AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg1:#F0F4FF; --bg2:#E6EEFF;
+  --text:#333; --text2:#666;
+  --card-bg:#ffffff; --card-border:#DCE3F5;
+  --bubble-ai:#ffffff; --bubble-user:#5C6BCA;
+  --think-bg:#FFF8E1; --think-border:#FFD54F;
+  --tool-bg:#E3F2FD; --tool-border:#90CAF9;
+  --form-bg:#F3E5F5; --form-border:#CE93D8;
+  --cite-bg:#E8EAF6; --cite-border:#C5CAE9;
+  --accent:#5C6BCA; --accent-dark:#3F51B5;
+  --shadow:0 4px 18px rgba(92,107,202,.10);
+}
+html,body{height:100%;}
+body{
+  font-family:"Microsoft YaHei","PingFang SC",sans-serif;
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  color:var(--text); min-height:100vh;
+}
+.page{max-width:960px;margin:0 auto;padding:1.2rem 1.2rem 215px;} /* 底部留白给悬浮输入条（放 .page 上，body 的 padding-bottom 不计入 scrollHeight） */
+/* 标题区（无绿色页头） */
+.hero{text-align:center;padding:1.2rem 0 .8rem;}
+.hero h1{font-size:28px;color:#2E3A6B;font-weight:700;letter-spacing:.5px;}
+.hero p{font-size:18px;color:var(--text2);margin-top:.35rem;}
+/* 宫格卡片 2x3 */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:1rem 0 1.2rem;}
+.card{
+  background:var(--card-bg); border:1px solid var(--card-border);
+  border-radius:16px; padding:18px 14px; cursor:pointer;
+  font-family:inherit; text-align:center; color:var(--text);
+  font-size:20px; font-weight:600;
+  box-shadow:var(--shadow); transition:transform .15s, box-shadow .15s, border-color .15s;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+.card .icon{font-size:30px;}
+.card .sub{font-size:13px;color:var(--text2);font-weight:400;line-height:1.4;}
+.card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 8px 24px rgba(92,107,202,.18);}
+.card:active{transform:translateY(-1px);}
+/* 示例区 */
+.examples{margin:0 0 1rem;}
+.examples h3{font-size:18px;color:#2E3A6B;margin-bottom:.55rem;font-weight:600;}
+.examples .ex-list{display:flex;flex-direction:column;gap:10px;}
+.ex{
+  background:#fff;border:1px solid var(--card-border);border-radius:12px;
+  padding:14px 16px;cursor:pointer;font-family:inherit;
+  font-size:17px;color:var(--text);text-align:left;
+  display:flex;align-items:center;gap:10px;
+  transition:border-color .15s,background .15s;
+}
+.ex:hover{border-color:var(--accent);background:#F5F7FF;}
+.ex .arr{margin-left:auto;color:#9AA3C7;font-size:18px;}
+/* 聊天区 */
+#chatContainer{margin-top:.5rem;}
+.msg{display:flex;margin-bottom:1rem;animation:msgIn .28s ease-out both;}
+.msg.user{flex-direction:row-reverse;}
+.msg-bubble{max-width:84%;padding:14px 18px;border-radius:18px;line-height:1.85;font-size:17px;word-break:break-word;}
+.msg.user .msg-bubble{background:var(--bubble-user);color:#fff;border-bottom-right-radius:6px;}
+.msg.ai .msg-bubble{background:var(--bubble-ai);border:1px solid var(--card-border);border-bottom-left-radius:6px;box-shadow:var(--shadow);}
+.msg-time{font-size:12px;color:#9AA3C7;align-self:flex-end;margin:.3rem .4rem 0;}
+/* Markdown 渲染 */
+.msg.ai .msg-bubble h1,.msg.ai .msg-bubble h2,.msg.ai .msg-bubble h3{color:#2E3A6B;margin:.4rem 0 .3rem;line-height:1.4;}
+.msg.ai .msg-bubble h1{font-size:22px;} .msg.ai .msg-bubble h2{font-size:20px;} .msg.ai .msg-bubble h3{font-size:18px;}
+.msg.ai .msg-bubble p{margin:.35rem 0;}
+.msg.ai .msg-bubble ul,.msg.ai .msg-bubble ol{margin:.35rem 0 .35rem 1.6rem;}
+.msg.ai .msg-bubble li{margin:.25rem 0;}
+.msg.ai .msg-bubble strong{color:var(--accent-dark);}
+.msg.ai .msg-bubble em{color:#555;font-style:normal;text-decoration:underline;text-decoration-color:#bbb;text-underline-offset:3px;}
+.msg.ai .msg-bubble blockquote{border-left:3px solid #FF9800;background:#FFF3E0;margin:.5rem 0;padding:.4rem .9rem;color:#5D4037;border-radius:0 6px 6px 0;}
+.msg.ai .msg-bubble code{background:#EEF1F8;padding:1px 6px;border-radius:5px;font-size:15px;font-family:Consolas,monospace;}
+.msg.ai .msg-bubble a{color:#1976D2;}
+/* 思考过程折叠（黄色，保留） */
+.think{background:var(--think-bg);border:1px solid var(--think-border);border-left:3px solid #FFB300;border-radius:10px;margin-bottom:.6rem;font-size:15px;color:#5D4037;}
+.think summary{cursor:pointer;padding:10px 14px;font-weight:600;color:#8D6E00;list-style:none;display:flex;align-items:center;gap:.5rem;font-size:16px;}
+.think summary::-webkit-details-marker{display:none;}
+.think summary::before{content:"▶";font-size:12px;transition:transform .2s;}
+.think[open] summary::before{transform:rotate(90deg);}
+.think .think-body{padding:.2rem 14px 12px;color:#5D4037;white-space:pre-wrap;line-height:1.75;font-size:15px;}
+/* 工具卡片标签 */
+.tool-card{display:inline-block;font-size:13px;background:var(--tool-bg);color:#1565C0;border:1px solid var(--tool-border);border-radius:999px;padding:3px 12px;margin-bottom:.55rem;}
+.tool-card.emergency{background:#FFEBEE;color:#C62828;border-color:#EF9A9A;}
+/* 表单式追问 */
+.form-box{background:var(--form-bg);border:1px solid var(--form-border);border-radius:12px;padding:14px;margin-top:.7rem;}
+.form-box .form-title{font-weight:700;color:#4A148C;margin-bottom:.6rem;font-size:17px;}
+.form-box label{display:block;font-size:15px;color:#4A148C;margin:.5rem 0 .2rem;}
+.form-box input,.form-box select,.form-box textarea{width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:10px;font-size:16px;font-family:inherit;background:#fff;outline:none;}
+.form-box input:focus,.form-box select:focus,.form-box textarea:focus{border-color:var(--form-border);box-shadow:0 0 0 2px rgba(206,147,216,.25);}
+.form-box textarea{min-height:70px;resize:vertical;}
+.form-box .required{color:#C62828;font-size:13px;margin-left:.3rem;}
+.form-submit{margin-top:.7rem;background:#7B1FA2;color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:16px;cursor:pointer;font-family:inherit;}
+.form-submit:hover{background:#6A1B9A;}
+/* 法律依据引用 */
+.cites{margin-top:.7rem;border-top:1px dashed var(--cite-border);padding-top:.6rem;display:flex;flex-direction:column;gap:.5rem;}
+.cites-label{font-size:14px;color:var(--text2);margin-bottom:.2rem;}
+.cite{background:var(--cite-bg);border:1px solid var(--cite-border);border-left:3px solid var(--accent);border-radius:8px;padding:8px 12px;}
+.cite .doc{font-weight:600;color:var(--accent-dark);font-size:15px;}
+.cite .meta{color:#888;font-size:13px;margin:.2rem 0;}
+.cite .snippet{color:#444;font-size:14px;line-height:1.6;}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;background:#E8EAF6;color:var(--accent-dark);border:1px solid var(--cite-border);margin-left:.5rem;vertical-align:1px;}
+.tag.repealed{background:#FFEBEE;color:#A00;border-color:#FCC;}
+.disclaimer{color:#9AA3C7;font-size:13px;margin-top:.55rem;}
+.loading{display:flex;gap:.35rem;align-items:center;color:#888;font-size:15px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:bounce 1.4s infinite;}
+.dot:nth-child(1){animation-delay:-.32s;}
+.dot:nth-child(2){animation-delay:-.16s;}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes bounce{0%,80%,100%{transform:scale(0);}40%{transform:scale(1);}}
+/* 底部悬浮输入条 */
+.input-bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:50;
+  background:linear-gradient(180deg,rgba(240,244,255,0),#E6EEFF 18%);
+  padding:10px 16px 14px;
+}
+.input-inner{max-width:960px;margin:0 auto;}
+.quick-tags{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.quick-tag{
+  background:#fff;border:1px solid var(--card-border);color:var(--accent-dark);
+  border-radius:999px;padding:6px 14px;font-size:14px;cursor:pointer;font-family:inherit;
+  transition:background .15s,border-color .15s,color .15s;
+}
+.quick-tag:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.input-row{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--card-border);border-radius:28px;padding:8px 8px 8px 14px;box-shadow:0 4px 18px rgba(92,107,202,.12);}
+.attach-btn{
+  width:42px;height:42px;border:none;background:transparent;cursor:pointer;
+  font-size:22px;color:#7A82A8;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  transition:background .15s,color .15s;flex-shrink:0;
+}
+.attach-btn:hover{background:#EEF1F8;color:var(--accent-dark);}
+.dialect-sel{
+  border:1px solid var(--card-border);border-radius:999px;background:#F5F7FF;
+  font-size:14px;color:var(--accent-dark);font-family:inherit;padding:6px 10px;cursor:pointer;outline:none;flex-shrink:0;
+}
+.dialect-sel:focus{border-color:var(--accent);}
+.mic-btn{
+  width:42px;height:42px;border:none;background:transparent;cursor:pointer;
+  font-size:22px;color:#7A82A8;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  transition:background .15s,color .15s;flex-shrink:0;
+}
+.mic-btn:hover{background:#EEF1F8;color:var(--accent-dark);}
+.mic-btn.recording{background:#FFEBEE;color:#E53935;animation:pulse 1.2s infinite;}
+.mic-btn.recording::after{content:"";position:absolute;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(229,57,53,.4);}50%{box-shadow:0 0 0 8px rgba(229,57,53,0);}}
+.rec-hint{position:fixed;bottom:180px;left:50%;transform:translateX(-50%);background:#E53935;color:#fff;padding:6px 14px;border-radius:999px;font-size:14px;z-index:60;display:none;box-shadow:0 4px 14px rgba(229,57,53,.4);}
+.rec-hint.show{display:block;}
+#userInput{
+  flex:1;border:none;outline:none;resize:none;font-size:18px;font-family:inherit;
+  background:transparent;max-height:120px;min-height:28px;line-height:1.6;padding:6px 4px;color:var(--text);
+}
+#userInput::placeholder{color:#9AA3C7;}
+.send-btn{
+  width:48px;height:48px;border:none;border-radius:50%;background:var(--accent);
+  color:#fff;font-size:20px;cursor:pointer;transition:background .15s;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.send-btn:hover{background:var(--accent-dark);}
+.send-btn:disabled{background:#B0B8D8;cursor:not-allowed;}
+@media(max-width:720px){
+  .hero h1{font-size:24px;} .hero p{font-size:16px;}
+  .grid{grid-template-columns:repeat(2,1fr);}
+  .card{font-size:18px;padding:14px 10px;}
+  .msg-bubble{font-size:16px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hero">
+    <h1>⚖️ 筑梦护盾 · 农民工维权律师</h1>
+    <p>专业律师一对一，用大白话帮您把法律问题分析清楚</p>
+  </div>
+
+  <div class="grid">
+    <button class="card" onclick="cardClick('文本分析','📚 文本分析','师傅，您可以用大白话告诉我发生了什么——比如老板欠薪、受了工伤、还是合同有疑问。我来帮您把事情捋清楚，找出关键点。您直接说就行。')">
+      <span class="icon">📚</span><span>文本分析</span><span class="sub">口述案情，自动提取关键要素</span>
+    </button>
+    <button class="card" onclick="cardClick('文书起草','📝 文书起草','师傅，要起草法律文书，我得先把案情问清楚：\n\n1. 老板欠了您多少钱？\n2. 您在这干了多久？\n3. 有没有签过劳动合同？\n4. 手上有什么证据？（工资条、聊天记录、考勤等）\n\n您把这些告诉我，我帮您起草仲裁申请书或起诉状，还能导出打印。')">
+      <span class="icon">📝</span><span>文书起草</span><span class="sub">仲裁申请书/起诉状一键生成</span>
+    </button>
+    <button class="card" onclick="cardClick('法律研究','🔍 法律研究','师傅，您想知道哪方面的法律规定？比如欠薪能赔多少、工伤怎么认定、仲裁时效多久——您直接问，我帮您查法律条文。')">
+      <span class="icon">🔍</span><span>法律研究</span><span class="sub">法条速查 + 赔偿计算</span>
+    </button>
+    <button class="card" onclick="cardClick('合同生成','✍️ 合同生成','师傅，要生成合同，我先引导您填几个基本信息：\n\n1. 这是什么合同？（劳动用工/劳务分包/借款等）\n2. 双方是谁？（您和老板/公司）\n3. 主要想约定哪些条款？\n\n填完我帮您生成一份规范的合同底稿。')">
+      <span class="icon">✍️</span><span>合同生成</span><span class="sub">按基本信息生成规范合同</span>
+    </button>
+    <button class="card" onclick="cardClick('合同审查','🛡️ 合同审查','师傅，您把要审查的合同内容粘贴到下面输入框，或者点右边的回形针📎上传 .txt 文件。我帮您逐条扫坑——重点查“工伤自理”“自愿放弃社保”“押金”“扣证件”这些违法条款，告诉您能不能签。')">
+      <span class="icon">🛡️</span><span>合同审查</span><span class="sub">扫描违法条款，风险预警</span>
+    </button>
+    <button class="card" onclick="cardClick('AI检索','🔎 AI检索','师傅，您想知道什么？直接问，我帮您从法律知识库里检索相关现行有效条文，并标注出处。')">
+      <span class="icon">🔎</span><span>AI检索</span><span class="sub">知识库条文智能检索</span>
+    </button>
+  </div>
+
+  <div class="examples">
+    <h3>示例</h3>
+    <div class="ex-list">
+      <button class="ex" onclick="sendMsg('审查《劳务分包合同》的风险')">📄 审查《劳务分包合同》的风险 <span class="arr">→</span></button>
+      <button class="ex" onclick="sendMsg('一键生成工伤仲裁申请书')">⚖️ 一键生成工伤仲裁申请书 <span class="arr">→</span></button>
+      <button class="ex" onclick="sendMsg('老板欠薪怎么起诉？')">💰 老板欠薪怎么起诉？ <span class="arr">→</span></button>
+    </div>
+  </div>
+
+  <div id="chatContainer"></div>
+</div>
+
+<!-- 底部悬浮输入条 -->
+<div class="input-bar">
+  <div class="input-inner">
+    <div class="quick-tags">
+      <button class="quick-tag" onclick="cardClick('文本分析','📚 文本分析','师傅，您可以用大白话告诉我发生了什么——比如老板欠薪、受了工伤、还是合同有疑问。我来帮您把事情捋清楚，找出关键点。您直接说就行。')">文本分析</button>
+      <button class="quick-tag" onclick="cardClick('文书起草','📝 文书起草','师傅，要起草法律文书，我得先把案情问清楚：\n\n1. 老板欠了您多少钱？\n2. 您在这干了多久？\n3. 有没有签过劳动合同？\n4. 手上有什么证据？（工资条、聊天记录、考勤等）\n\n您把这些告诉我，我帮您起草仲裁申请书或起诉状，还能导出打印。')">文书起草</button>
+      <button class="quick-tag" onclick="cardClick('合同审查','🛡️ 合同审查','师傅，您把要审查的合同内容粘贴到下面输入框，或者点右边的回形针📎上传 .txt 文件。我帮您逐条扫坑——重点查“工伤自理”“自愿放弃社保”“押金”“扣证件”这些违法条款，告诉您能不能签。')">合同审查</button>
+      <button class="quick-tag" onclick="cardClick('合同生成','✍️ 合同生成','师傅，要生成合同，我先引导您填几个基本信息：\n\n1. 这是什么合同？（劳动用工/劳务分包/借款等）\n2. 双方是谁？（您和老板/公司）\n3. 主要想约定哪些条款？\n\n填完我帮您生成一份规范的合同底稿。')">合同生成</button>
+    </div>
+    <div class="input-row">
+      <button class="attach-btn" onclick="attachClick()" title="上传 .txt 合同文件">📎</button>
+      <select id="dialectSel" class="dialect-sel" title="选择方言">
+        <option value="普通话">普通话</option>
+        <option value="四川话">四川话</option>
+        <option value="成都话">成都话</option>
+        <option value="广西话">广西话</option>
+        <option value="湖南话">湖南话</option>
+        <option value="粤语">粤语</option>
+        <option value="河南话">河南话</option>
+        <option value="东北话">东北话</option>
+        <option value="上海话">上海话</option>
+        <option value="江西话">江西话</option>
+      </select>
+      <button class="mic-btn" id="micBtn" onclick="toggleRecord()" title="按住说话（方言识别）">🎤</button>
+      <textarea id="userInput" placeholder="师傅您直接说，越细越好（欠了多少、什么时候、有没有合同、有没有证据）…也可点🎤说方言" rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="发送">➤</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var API="/api";
+var c=document.getElementById("chatContainer");
+var inp=document.getElementById("userInput");
+var sb=document.getElementById("sendBtn");
+var chatHistory=[]; // 勿用 history（与 window.history 冲突）
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(ch){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];});}
+
+/* 简易 Markdown 渲染（离线无 CDN） */
+function md(src){
+  if(!src) return "";
+  src=String(src);
+  src=src.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  src=src.replace(/```([\s\S]*?)```/g,function(m,p1){return '<pre><code>'+p1.replace(/^\n/,'')+'</code></pre>';});
+  src=src.replace(/`([^`\n]+)`/g,'<code>$1</code>');
+  src=src.replace(/^###\s+(.*)$/gm,'<h3>$1</h3>');
+  src=src.replace(/^##\s+(.*)$/gm,'<h2>$1</h2>');
+  src=src.replace(/^#\s+(.*)$/gm,'<h1>$1</h1>');
+  src=src.replace(/^&gt;\s?(.*)$/gm,'<blockquote>$1</blockquote>');
+  src=src.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  src=src.replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<em>$2</em>');
+  src=src.replace(/^\s*[-*]\s+(.*)$/gm,'<li>$1</li>');
+  src=src.replace(/^\s*\d+\.\s+(.*)$/gm,'<li>$1</li>');
+  src=src.replace(/(<li>[\s\S]*?<\/li>)(?!\s*<li>)/g,function(m){return '<ul>'+m+'</ul>';});
+  var blocks=src.split(/\n{2,}/);
+  var out=[];
+  for(var i=0;i<blocks.length;i++){
+    var b=blocks[i].trim();
+    if(!b) continue;
+    if(/^<(h1|h2|h3|ul|ol|pre|blockquote)/.test(b)) out.push(b);
+    else out.push('<p>'+b.replace(/\n/g,'<br>')+'</p>');
+  }
+  return out.join("\n");
+}
+
+function nowT(){var d=new Date();return d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0");}
+function sendMsg(t){inp.value=t;sendMessage();}
+/* 滚到页面底部（聊天区是页面流滚动，必须滚 window；延时让 DOM 先渲染完）。
+   减去悬浮输入条高度，确保最后内容不被遮挡。 */
+function scrollBottom(){
+  setTimeout(function(){
+    var h=document.documentElement.scrollHeight||document.body.scrollHeight;
+    window.scrollTo({top:h,behavior:'smooth'});
+    // 兜底：部分浏览器 smooth 异步，再补一次硬跳
+    setTimeout(function(){window.scrollTo(0,document.documentElement.scrollHeight||document.body.scrollHeight);},120);
+  },40);
+}
+function addB(html,role){var d=document.createElement("div");d.className="msg "+role;d.innerHTML='<div class="msg-bubble">'+html+'</div><span class="msg-time">'+nowT()+'</span>';c.appendChild(d);scrollBottom();return d.querySelector(".msg-bubble");}
+function addT(){var d=document.createElement("div");d.className="msg ai";d.id="tp";d.innerHTML='<div class="msg-bubble"><div class="loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div> 律师正在分析…</div>';c.appendChild(d);scrollBottom();}
+function rmT(){var e=document.getElementById("tp");if(e)e.remove();}
+
+function renderToolCard(toolCard){
+  if(!toolCard) return "";
+  var cls="tool-card";
+  if(toolCard==="紧急救助") cls+=" emergency";
+  return '<span class="'+cls+'">🔧 调用技能：'+esc(toolCard)+'</span>';
+}
+function renderThinking(thinking){
+  if(!thinking) return "";
+  return '<details class="think"><summary>🧠 律师思考过程</summary><div class="think-body">'+esc(thinking)+'</div></details>';
+}
+function renderForm(form){
+  if(!form||!form.fields||!form.fields.length) return "";
+  var h='<div class="form-box"><div class="form-title">'+esc(form.title||"请补充以下信息")+'</div>';
+  for(var i=0;i<form.fields.length;i++){
+    var f=form.fields[i];
+    var req=f.required?'<span class="required">*必填</span>':'';
+    h+='<label>'+esc(f.label)+' '+req+'</label>';
+    if(f.type==="textarea"){h+='<textarea data-key="'+esc(f.key)+'"></textarea>';}
+    else if(f.type==="select"||f.type==="radio"){
+      var opts=f.options||[];
+      h+='<select data-key="'+esc(f.key)+'"><option value="">请选择</option>';
+      for(var j=0;j<opts.length;j++) h+='<option value="'+esc(opts[j])+'">'+esc(opts[j])+'</option>';
+      h+='</select>';
+    }else{h+='<input type="text" data-key="'+esc(f.key)+'" placeholder="请输入">';}
+  }
+  h+='<button class="form-submit" onclick="submitForm(this)">提交补齐信息</button></div>';
+  return h;
+}
+function submitForm(btn){
+  var box=btn.closest(".form-box");
+  if(!box) return;
+  var inputs=box.querySelectorAll("[data-key]");
+  var parts=[];
+  for(var i=0;i<inputs.length;i++){
+    var k=inputs[i].getAttribute("data-key");
+    var v=inputs[i].value.trim();
+    if(!v){inputs[i].focus();alert("师傅，这一项还空着，麻烦补一下再提交。");return;}
+    parts.push(k+"："+v);
+  }
+  var msg="补齐信息如下：\n"+parts.join("\n");
+  box.outerHTML='<div style="color:#4A148C;font-size:15px;padding:.4rem 0;">已提交补齐信息，律师正在分析…</div>';
+  sendMsg(msg);
+}
+
+function appendAI(d){
+  var html=renderThinking(d.thinking)+renderToolCard(d.tool_card)+md(d.answer)+renderForm(d.form);
+  var b=addB(html,"ai");
+  if(d.opening){return;}
+  chatHistory.push({role:"assistant",content:d.answer||""});
+  if(d.citations&&d.citations.length){
+    var citeBox=document.createElement("div");citeBox.className="cites";
+    var lbl=document.createElement("div");lbl.className="cites-label";lbl.textContent="—— 法律依据 ——";
+    citeBox.appendChild(lbl);
+    for(var i=0;i<d.citations.length;i++){
+      var ci=d.citations[i];var cd=document.createElement("div");cd.className="cite";
+      var st=ci.status==="repealed"?'<span class="tag repealed">已废止</span>':"";
+      cd.innerHTML='<div class="doc">《'+esc(ci.document_name)+'》'+esc(ci.article_no)+st+'</div><div class="meta">生效 '+esc(ci.enacted_date||"—")+(ci.revision_date?" · 修订 "+esc(ci.revision_date):"")+'</div><div class="snippet">'+esc(ci.snippet||"")+'</div>';
+      citeBox.appendChild(cd);
+    }
+    b.appendChild(citeBox);
+  }
+  var disc=document.createElement("div");disc.className="disclaimer";disc.textContent="本回答由 AI 法律助手生成，仅供参考，不构成正式法律意见。";
+  b.appendChild(disc);
+  scrollBottom(); // 追加引用/免责后高度增加，补滚一次
+}
+
+/* 卡片点击：以律师身份主动开口引导，意图记入多轮上下文 */
+function cardClick(intent, title, guide){
+  addB('<strong>'+esc(title)+'</strong>',"user");
+  chatHistory.push({role:"user",content:intent});
+  addB(md(guide),"ai");
+  chatHistory.push({role:"assistant",content:guide});
+  scrollBottom();
+}
+
+/* 附件：读取 .txt 文件内容到输入框 */
+function attachClick(){
+  var f=document.createElement("input");
+  f.type="file"; f.accept=".txt,text/plain";
+  f.onchange=function(e){
+    var file=e.target.files[0]; if(!file) return;
+    if(file.name.endsWith(".txt")||file.type==="text/plain"){
+      var r=new FileReader();
+      r.onload=function(){inp.value=r.result;inp.focus();inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,120)+'px';};
+      r.onerror=function(){alert("文件读取出错，麻烦您直接把合同内容粘贴到输入框。");};
+      r.readAsText(file,"utf-8");
+    }else{
+      alert("师傅，目前支持上传 .txt 文件；docx/图片请直接把内容粘贴到输入框里。");
+    }
+  };
+  f.click();
+}
+
+/* ============ 语音识别（讯飞方言版） ============ */
+var micBtn=document.getElementById("micBtn");
+var dialectSel=document.getElementById("dialectSel");
+var recState={recording:false,ctx:null,stream:null,processor:null,source:null,chunks:[],recHint:null};
+
+function ensureRecHint(){
+  if(recState.recHint)return recState.recHint;
+  var h=document.createElement("div");h.className="rec-hint";h.textContent="● 录音中… 再点一次结束";
+  document.body.appendChild(h);recState.recHint=h;return h;
+}
+
+function toggleRecord(){
+  if(recState.recording){stopRecord();}else{startRecord();}
+}
+
+function startRecord(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){addB("您的浏览器不支持录音，请用 Chrome 或 Edge 最新版。","ai");return;}
+  navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true}}).then(function(stream){
+    recState.stream=stream;
+    var AudioCtxClass=window.AudioContext||window.webkitAudioContext;
+    recState.ctx=new AudioCtxClass();
+    recState.source=recState.ctx.createMediaStreamSource(stream);
+    var processor=recState.ctx.createScriptProcessor(4096,1,1);
+    recState.processor=processor;
+    recState.chunks=[];
+    processor.onaudioprocess=function(e){
+      var d=e.inputBuffer.getChannelData(0);
+      var copy=new Float32Array(d.length);copy.set(d);
+      recState.chunks.push(copy);
+    };
+    recState.source.connect(processor);
+    processor.connect(recState.ctx.destination);
+    recState.recording=true;
+    micBtn.classList.add("recording");micBtn.textContent="⏺";
+    ensureRecHint().classList.add("show");
+  }).catch(function(e){
+    var reason=e.name==="NotAllowedError"?"您拒绝了麦克风权限，请在浏览器地址栏的🔒图标里允许麦克风后重试"
+      :e.name==="NotFoundError"?"没找到麦克风设备，请检查耳机/麦克风是否插好"
+      :"麦克风无法使用："+e.message;
+    addB("🎤 "+reason,"ai");
+    scrollBottom();
+  });
+}
+
+function stopRecord(){
+  if(!recState.recording)return;
+  recState.recording=false;
+  micBtn.classList.remove("recording");micBtn.textContent="🎤";
+  ensureRecHint().classList.remove("show");
+  try{recState.processor.disconnect();}catch(e){}
+  try{recState.source.disconnect();}catch(e){}
+  try{recState.stream.getTracks().forEach(function(t){t.stop();});}catch(e){}
+  var rate=recState.ctx.sampleRate;
+  recState.ctx.close();
+  // 拼接 PCM
+  var total=0;for(var i=0;i<recState.chunks.length;i++)total+=recState.chunks[i].length;
+  var pcm=new Float32Array(total);var off=0;
+  for(var j=0;j<recState.chunks.length;j++){pcm.set(recState.chunks[j],off);off+=recState.chunks[j].length}
+  recState.chunks=[];
+  // 重采样到 16k
+  var pcm16k=(rate===16000)?pcm:downsample(pcm,rate,16000);
+  var wav=encodeWAV(pcm16k,16000);
+  uploadVoice(wav);
+}
+
+function downsample(buffer,fromRate,toRate){
+  if(fromRate===toRate||!buffer.length)return buffer;
+  var ratio=fromRate/toRate;var newLen=Math.round(buffer.length/ratio);
+  var result=new Float32Array(newLen);
+  for(var i=0;i<newLen;i++){
+    var idx=i*ratio;var lo=Math.floor(idx);var hi=Math.min(lo+1,buffer.length-1);
+    var frac=idx-lo;result[i]=buffer[lo]*(1-frac)+buffer[hi]*frac;
+  }
+  return result;
+}
+
+function encodeWAV(samples,sampleRate){
+  var buffer=new ArrayBuffer(44+samples.length*2);
+  var view=new DataView(buffer);
+  function writeStr(o,s){for(var i=0;i<s.length;i++)view.setUint8(o+i,s.charCodeAt(i));}
+  writeStr(0,"RIFF");view.setUint32(4,36+samples.length*2,true);writeStr(8,"WAVE");
+  writeStr(12,"fmt ");view.setUint32(16,16,true);view.setUint16(20,1,true);
+  view.setUint16(22,1,true);view.setUint32(24,sampleRate,true);
+  view.setUint32(28,sampleRate*2,true);view.setUint16(32,2,true);view.setUint16(34,16,true);
+  writeStr(36,"data");view.setUint32(40,samples.length*2,true);
+  var off=44;for(var i=0;i<samples.length;i++,off+=2){
+    var s=Math.max(-1,Math.min(1,samples[i]));
+    view.setInt16(off,s<0?s*0x8000:s*0x7fff,true);
+  }
+  return new Blob([buffer],{type:"audio/wav"});
+}
+
+function uploadVoice(wavBlob){
+  var dialect=dialectSel.value;
+  var fd=new FormData();
+  fd.append("audio",wavBlob,"voice.wav");
+  fd.append("dialect",dialect);
+  var loading=addB('<div class="loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div> 🎤 正在用'+esc(dialect)+'识别语音…',"user");
+  fetch(API+"/voice/asr",{method:"POST",body:fd}).then(function(r){return r.json();}).then(function(d){
+    loading.remove();
+    if(d.error){addB("语音识别失败："+esc(d.error)+"。"+(d.configured===false?"请在 start.bat 里填讯飞密钥":""),"ai");return;}
+    if(d.text){
+      inp.value+=d.text;
+      inp.focus();
+      inp.style.height="auto";inp.style.height=Math.min(inp.scrollHeight,120)+"px";
+      scrollBottom();
+    }else{
+      addB("没听清您说的话，请再点🎤说一遍（可以稍大点声、说慢点）。","ai");
+    }
+  }).catch(function(e){
+    loading.remove();
+    addB("上传失败："+esc(e.message)+"，请检查网络。","ai");
+  });
+}
+
+async function sendMessage(){
+  var q=inp.value.trim();
+  if(!q) return;
+  inp.value="";inp.style.height="auto";
+  sb.disabled=true;
+  addB(esc(q),"user");
+  chatHistory.push({role:"user",content:q});
+  addT();
+  try{
+    var r=await fetch(API+"/chat",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({question:q,history:chatHistory})
+    });
+    if(!r.ok){rmT();addB("请求失败（HTTP "+r.status+"），请确认智能体后端已启动。","ai");sb.disabled=false;return;}
+    var d=await r.json();
+    rmT();
+    appendAI(d);
+  }catch(e){
+    rmT();
+    addB("请求失败："+esc(e.message)+"，请确认智能体后端已启动。","ai");
+  }
+  sb.disabled=false;
+}
+
+/* 启动：拉取开场白 */
+async function bootOpening(){
+  try{
+    var r=await fetch(API+"/opening");
+    if(r.ok){var d=await r.json();appendAI(d);}
+  }catch(e){/* 后端未启动时静默 */}
+}
+bootOpening();
+</script>
+</body>
+</html>
