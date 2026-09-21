@@ -1,0 +1,5 @@
+# Windows 批处理必须是 CRLF 换行。
+# cmd.exe 读 LF 结尾的 .bat 会出现行偏移，把注释/字符串的一部分当命令执行
+# （实测：REM 注释里的中文片段被执行，报"不是内部或外部命令"）。
+# 标成 -text 让 git 不做换行转换，保证 clone 和 ZIP 下载拿到的都是原始 CRLF。
+*.bat -text
